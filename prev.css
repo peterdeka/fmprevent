@@ -1,0 +1,91 @@
+.conn-r .conn-selector{
+	position:absolute;
+	right:-110px;
+	top:-7px;
+}
+
+.conn-l .conn-selector{
+	position:absolute;
+	left:-110px;
+	top:-7px;
+}
+
+.conn-r .conn-label{
+	position:absolute;
+	left:-130px;
+	top:10px;
+}
+
+.conn-l .conn-label{
+	position:absolute;
+	left:80px;
+	top:10px;
+}
+
+.conn{
+	position:absolute;
+	left:0px;
+	width:77px;
+	height:8px;
+}
+
+.free-cables-r .cable-sgua{
+	position:absolute;
+	top:120px;
+	left:-120px;
+}
+
+.free-cables-l .cable-sgua{
+	position:absolute;
+	top:120px;
+	right:-120px;
+}
+
+.free-cables-r .conn-container{
+	left:195px;
+	position:absolute;
+}
+
+.free-cables-l .conn-container{
+	right:270px;
+	position:absolute;
+}
+
+.conn-1-of-3 {
+	top:0px;
+}
+
+.conn-2-of-3{
+position:absolute;top:92px;left:0px
+}
+
+.conn-3-of-3{
+position:absolute;top:184px;left:0px
+}
+
+.conn-r[data-conn-type=puntale]{
+	background-image:url(images/connettori/connettore_puntale_right.png);
+}
+
+.conn-l[data-conn-type=puntale]{
+	background-image:url(images/connettori/connettore_puntale_left.png);
+}
+
+#cable-length{
+	right:100px;
+	top:-100px;
+	position:absolute;
+}
+
+#cable-sig-r{
+	right:0px;top:-30px;position:absolute;
+}
+
+#cable-sig-l{
+	left:0px;top:-30px;position:absolute;
+}
+
+#cable-type{
+	right:100px;top:10px;position:absolute;
+}
+
