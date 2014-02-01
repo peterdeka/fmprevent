@@ -6,6 +6,14 @@
 	position:absolute;top:140px;width:195px;height:191px;
 }
 
+.free-cables-r{
+	left:721px;
+}
+
+.free-cables-l{
+	left:195px;
+}
+
 
 .conn-r .conn-selector{
 	position:absolute;
