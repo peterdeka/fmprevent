@@ -5,26 +5,50 @@ render={};
 FMPrevent.Models={};
 FMPrevent.Collections={};
 FMPrevent.Views={};
-FMPrevent.Models.Cable = Backbone.Model.extend();
+
+FMPrevent.Models.CableEnd = Backbone.Model.extend({
+
+	defaults:{
+
+		side:'n',
+		type:'n',
+		n_conns:0,
+		conns:[]
+	}
+});
+
+FMPrevent.Models.Cable = Backbone.Model.extend({
+
+		defaults:{
+
+			type:'HEF3p',
+			n_wires:3,
+			right_end:new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:3,conns:[]}),
+			left_end:new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:3,conns:[]})
+
+		}
+
+	});
 
 FMPrevent.Models.Connector = Backbone.Model.extend();
 
-FMPrevent.Models.CableEnd = Backbone.Model.extend();
 
 
 
 
-FMPrevent.Views.CableEnd = Backbone.Views.extend({
+FMPrevent.Views.CableEnd = Backbone.View.extend({
 
 	initialize: function(){
-		var bkimg='images/cavi/'+this.model.n_conns+'_cavi_'+this.model.side+'.png';
+		
+		  
 		//this.render();
     },
 
     render: function() {
-
+    	
         var html = get_and_render('freecables',this.model.toJSON());
         return this.$el.html(html);
+		
     }
 });
 
@@ -33,14 +57,12 @@ FMPrevent.Views.CableEnd = Backbone.Views.extend({
 FMPrevent.Views.Cable = Backbone.View.extend({
 
 	 el: "#fmprevent",
-	 right_end : new FMPrevent.Views.CableEnd({model:{side:'r',type:'freecables',n_conns:3,conns:[]}}),
-	 left_end : new FMPrevent.Views.CableEnd({model:{side:'l',type:'freecables',n_conns:3,conns:[]}}),
-
 
      events: {
       "change #cable-type"   : "change_cable_model",
       
     },
+
     initialize: function(){
 		
 		this.render();
@@ -50,12 +72,13 @@ FMPrevent.Views.Cable = Backbone.View.extend({
 
         var html = get_and_render('cableview',null);
         this.$el.html(html);
-        this.$el.append(this.right_end.render());
+        this.$el.append(new FMPrevent.Views.CableEnd({model:this.model.get('right_end')}).render());
+        this.$el.append(new FMPrevent.Views.CableEnd({model:this.model.get('left_end')}).render());
     }
 });
 
 
-new FMPrevent.Views.Cable({model:{}});
+new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable()});
 
 })();
 
