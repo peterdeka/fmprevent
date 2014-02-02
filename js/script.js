@@ -5,6 +5,8 @@ render={};
 FMPrevent.Models={};
 FMPrevent.Collections={};
 FMPrevent.Views={};
+FMPrevent.Models.Connector = Backbone.Model.extend();
+
 
 FMPrevent.Models.CableEnd = Backbone.Model.extend({
 
@@ -14,7 +16,17 @@ FMPrevent.Models.CableEnd = Backbone.Model.extend({
 		type:'n',
 		n_conns:0,
 		conns:[]
-	}
+	},
+
+    initialize: function(){
+        var connectors=[];
+         for(i=0;i<this.get('n_conns');i++){
+            var c=new FMPrevent.Models.Connector({idx:i+1,n_conns:this.get('n_conns'),type:'puntale',side:this.get('side')});
+            connectors.push(c); 
+         }
+        this.set('connectors',connectors);
+    }
+
 });
 
 FMPrevent.Models.Cable = Backbone.Model.extend({
@@ -30,24 +42,38 @@ FMPrevent.Models.Cable = Backbone.Model.extend({
 
 	});
 
-FMPrevent.Models.Connector = Backbone.Model.extend();
 
 
+FMPrevent.Views.Connector = Backbone.View.extend({
 
+    initialize: function(){
+
+
+    },
+
+    render: function(){
+
+        var html = get_and_render('connview',this.model.toJSON());
+        return this.$el.html(html);
+    }
+
+});
 
 
 FMPrevent.Views.CableEnd = Backbone.View.extend({
 
 	initialize: function(){
 		
-		  
-		//this.render();
+
     },
 
     render: function() {
     	
         var html = get_and_render('freecables',this.model.toJSON());
-        return this.$el.html(html);
+        this.$el.html(html);
+        var me=this.$el.find('div.conn-container');
+        _.each(this.model.get('connectors'),function(el){me.append(new FMPrevent.Views.Connector({model:el}).render());});
+        return this.$el.html();
 		
     }
 });
