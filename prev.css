@@ -80,13 +80,6 @@ position:absolute;top:92px;left:0px
 position:absolute;top:184px;left:0px
 }
 
-.conn-r[data-conn-type=puntale]{
-	background-image:url(images/connettori/connettore_puntale_right.png);
-}
-
-.conn-l[data-conn-type=puntale]{
-	background-image:url(images/connettori/connettore_puntale_left.png);
-}
 
 #cable-length{
 	right:100px;

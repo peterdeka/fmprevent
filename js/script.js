@@ -46,6 +46,13 @@ FMPrevent.Models.Cable = Backbone.Model.extend({
 
 FMPrevent.Views.Connector = Backbone.View.extend({
 
+
+    events:{
+
+        "input .conn-label" : "change_label",
+        "change .conn-selector" : "change_conn_type"
+    },
+
     initialize: function(){
 
 
@@ -54,7 +61,21 @@ FMPrevent.Views.Connector = Backbone.View.extend({
     render: function(){
 
         var html = get_and_render('connview',this.model.toJSON());
-        return this.$el.html(html);
+        this.$el.html(html);
+        return this;
+    },
+
+    change_label: function(){
+
+        this.model.set('label',this.$el.find('.conn-label').val());
+
+    },
+
+    change_conn_type: function(){
+
+        this.model.set('type',this.$el.find('.conn-selector').val());
+        
+
     }
 
 });
@@ -62,7 +83,13 @@ FMPrevent.Views.Connector = Backbone.View.extend({
 
 FMPrevent.Views.CableEnd = Backbone.View.extend({
 
-	initialize: function(){
+    events: {
+      
+      "input .cable-sgua"   : "change_end_sgua"
+
+    },
+
+   	initialize: function(){
 		
 
     },
@@ -72,9 +99,18 @@ FMPrevent.Views.CableEnd = Backbone.View.extend({
         var html = get_and_render('freecables',this.model.toJSON());
         this.$el.html(html);
         var me=this.$el.find('div.conn-container');
-        _.each(this.model.get('connectors'),function(el){me.append(new FMPrevent.Views.Connector({model:el}).render());});
-        return this.$el.html();
+        _.each(this.model.get('connectors'),function(el){
+            var v=new FMPrevent.Views.Connector({model:el});
+            me.append(v.render().$el);
+        });
+        return this;
 		
+    },
+
+    change_end_sgua: function(){
+
+        this.model.set('sgua',this.$el.find('.cable-sgua').val());
+
     }
 });
 
@@ -85,8 +121,11 @@ FMPrevent.Views.Cable = Backbone.View.extend({
 	 el: "#fmprevent",
 
      events: {
-      "change #cable-type"   : "change_cable_model",
-      
+      "input #cable-type"   : "change_cable_model",
+      "input #cable-sig-l"   : "change_label_l",
+      "input #cable-sig-r"   : "change_label_r",
+      "input #cable-length"   : "change_cable_length",
+        
     },
 
     initialize: function(){
@@ -98,19 +137,39 @@ FMPrevent.Views.Cable = Backbone.View.extend({
 
         var html = get_and_render('cableview',null);
         this.$el.html(html);
-        this.$el.append(new FMPrevent.Views.CableEnd({model:this.model.get('right_end')}).render());
-        this.$el.append(new FMPrevent.Views.CableEnd({model:this.model.get('left_end')}).render());
-    }
+        var vr=new FMPrevent.Views.CableEnd({model:this.model.get('right_end')});
+        this.$el.append(vr.render().$el);
+        var vl=new FMPrevent.Views.CableEnd({model:this.model.get('left_end')});
+        this.$el.append(vl.render().$el);
+    },
+
+    change_cable_model:  function(){
+        var gigio=2;
+    },
+
+    change_label_l: function(){
+
+        this.model.set('label_l',this.$el.find("#cable-sig-l").val());
+        
+    },
+
+    change_label_r: function(){
+
+        this.model.set('label_r',this.$el.find("#cable-sig-r").val());
+
+    },
+
+    change_cable_length: function(){
+
+        this.model.set('t_length',this.$el.find("#cable-length").val());
+
+    },
 });
 
 
-new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable()});
+thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable()});
 
 })();
-
-
-
-
 
 
 
