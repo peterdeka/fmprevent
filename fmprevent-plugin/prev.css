@@ -1,3 +1,10 @@
+input[type="text"]{
+	background:white;
+	padding:5px 5px;
+	color:black;
+	width:auto;
+}
+
 #fmprevent{
 	position:relative;width:880px;height:600px;
 }
