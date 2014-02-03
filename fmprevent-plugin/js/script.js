@@ -18,10 +18,10 @@
 
     FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" style="position:absolute;top:214px;left:390px"><input type="text" id="cable-length" placeholder="lunghezza">'+
       '<input type="text" id="cable-sig-r" placeholder="siglatura dx"> <input type="text" id="cable-sig-l" placeholder="siglatura sx">'+
-  '<img src="wp-content/plugins/fmprevent-plugin/images/cavo_blu.png" >'+
+  '<img src="../wp-content/plugins/fmprevent-plugin/images/cavo_blu.png" >'+
   '<input type="text" id="cable-type"  placeholder="tipo cavo" ></div>');
 
-  FMPrevent.Templates.Connector=Handlebars.compile('<div class="conn conn-{{side}} conn-{{idx}}-of-{{n_conns}}" style="background-image:url(wp-content/plugins/fmprevent-plugin/images/connettori/connettore_{{type}}_{{side}}.png)">'+
+  FMPrevent.Templates.Connector=Handlebars.compile('<div class="conn conn-{{side}} conn-{{idx}}-of-{{n_conns}}" style="background-image:url(../wp-content/plugins/fmprevent-plugin/images/connettori/connettore_{{type}}_{{side}}.png)">'+
       '<input class="conn-label" type="text" placeholder="siglatura" value="{{label}}" size="12">'+
       '<select class="conn-selector" >'+
         '<option value="puntale" {{#if_eq type "puntale"}}selected{{/if_eq}}>Puntale</option>'+
@@ -31,7 +31,7 @@
       '</select>'+
     '</div>');
 
-    FMPrevent.Templates.FreeCables=Handlebars.compile('<div class="free-cables free-cables-{{side}} free-cables-{{n_conns}}" style="background-image:url(wp-content/plugins/fmprevent-plugin/images/cavi/{{n_conns}}_cavi_{{side}}.png)">'+
+    FMPrevent.Templates.FreeCables=Handlebars.compile('<div class="free-cables free-cables-{{side}} free-cables-{{n_conns}}" style="background-image:url(../wp-content/plugins/fmprevent-plugin/images/cavi/{{n_conns}}_cavi_{{side}}.png)">'+
         '<input type="text" class="cable-sgua" placeholder="sguainatura">'+
         '<div class="conn-container">'+
         '</div>'+
