@@ -21,7 +21,7 @@ FMPrevent.Models.CableEnd = Backbone.Model.extend({
     initialize: function(){
         var connectors=[];
          for(i=0;i<this.get('n_conns');i++){
-            var c=new FMPrevent.Models.Connector({idx:i+1,n_conns:this.get('n_conns'),type:'puntale',side:this.get('side')});
+            var c=new FMPrevent.Models.Connector({idx:i+1,n_conns:this.get('n_conns'),side:this.get('side'),type:'puntale',label:''});
             connectors.push(c); 
          }
         this.set('connectors',connectors);
@@ -31,21 +31,20 @@ FMPrevent.Models.CableEnd = Backbone.Model.extend({
 
 FMPrevent.Models.Cable = Backbone.Model.extend({
 
-		defaults:{
+		initialize: function(){
 
-			type:'HEF3p',
-			n_wires:3,
-			right_end:new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:3,conns:[]}),
-			left_end:new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:3,conns:[]})
+            var a=this.get('type').split('-');
+            this.set('n_wires',parseInt(a[a.length-1]));
+            this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:this.get('n_wires'),conns:[]}));
+            this.set('left_end',new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:this.get('n_wires'),conns:[]}));
 
-		}
+        }
 
 	});
 
 
 
 FMPrevent.Views.Connector = Backbone.View.extend({
-
 
     events:{
 
@@ -74,7 +73,7 @@ FMPrevent.Views.Connector = Backbone.View.extend({
     change_conn_type: function(){
 
         this.model.set('type',this.$el.find('.conn-selector').val());
-        
+        this.render();
 
     }
 
@@ -166,8 +165,8 @@ FMPrevent.Views.Cable = Backbone.View.extend({
     },
 });
 
-
-thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable()});
+cable_types=['HEF-3','HEF-4','HEF-5'];
+thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable({type:cable_types[0]})});
 
 })();
 
