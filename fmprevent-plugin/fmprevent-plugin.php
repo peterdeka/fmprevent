@@ -14,40 +14,9 @@ register_activation_hook( __FILE__, 'fmprev_db_install' );
 add_shortcode( 'fmprevent-plugin', 'do_the_page' );
 
 
-function your_css_and_js() {
-wp_register_style('fmprev_prev', plugins_url('prev.css',__FILE__ ));
-wp_register_style('fmprev_jqui', 'https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css');
-
-wp_enqueue_style('fmprev_prev');
-wp_enqueue_style('fmprev_jqui');
-//wp_register_script('jquijs', "https://code.jquery.com/ui/1.10.4/jquery-ui.js",null,NULL,true);
-//wp_register_script( 'underscore', plugins_url('js/underscore-min.js',__FILE__ ),false,NULL,true);
-//wp_register_script( 'backbone', plugins_url('js/backbone-min.js',__FILE__ ),false,NULL,true);
-wp_register_script( 'handlebars', plugins_url('js/handlebars.js',__FILE__ ),false,NULL,true);
-wp_register_script( 'fmprev', plugins_url('js/script.js',__FILE__ ),false,NULL,true);
-wp_enqueue_script('jquery-ui-autocomplete');
-wp_enqueue_script('underscore');
-wp_enqueue_script('backbone');
-wp_enqueue_script('handlebars');
-wp_enqueue_script('fmprev');
-}
-add_action( 'wp_enqueue_scripts','your_css_and_js');
-
-
 function do_the_page(){
-	global $wpdb;
-	$result = $wpdb->get_results("select * from ".$wpdb->prefix . "fmprev_cable_types");
-	
-	echo '<script type="text/javascript"> cable_types=[';
-	foreach ( $result as $r ) 
-	{
-  		echo '"'.$r->sigla.'",';
-  	}	 
-	echo ']</script>';
-	echo '<div id="fmprevent"></div>';
 
-
-
+	require 'fmprevent-plugin-front.php';
 }
 
 function fmprev_db_install() {
@@ -83,56 +52,56 @@ add_action( 'admin_menu', 'fmprevent_menu' );
 
 /** Step 1. */
 function fmprevent_menu() {
-	add_menu_page( 'Preventivatore FMGroup', 'Preventivatore FM', 'manage_options', 'fmprevent_admin', 'fmprevent_options' );
+	global $pw_settings_page;
+	$pw_settings_page = add_menu_page( 'Preventivatore FMGroup', 'Preventivatore FM', 'manage_options', 'fmprevent_admin', 'fmprevent_options' );
 }
 
 /** Step 3. */
 function fmprevent_options() {
-	if ( !current_user_can( 'manage_options' ) )  {
-		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
-	}
-	echo '<div class="wrap">';
-	echo '<h2>Preventivatore cavi FMGroup</h2>';
-	echo '<p>Da qui puoi gestire i modelli di cavo disponibili per gli utenti.</p>';
-	echo '</div>';
-	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-    		$error = false;
-    		global $wpdb;
-   		$table_name = $wpdb->prefix . "fmprev_cable_types";
-    		
-		if($wpdb->insert( $table_name, array( 'sigla' => $_POST['sigla'] ) )>0){
-			echo '<p style="background-color:white;color:green;font-weight:Bold">Nuovo elemento con sigla '.$_POST['sigla'].' inserito con successo.</p>';
-		}
-		else{
-			echo '<p style="background-color:white;color:red;font-weight:Bold">Errore durante l\'inserimento del nuovo elemento.</p>';
-		}
-    	}
 
-
-/*LISTA cavi inseriti*/
-	echo '<div class="wrap"><h3>Cavi inseriti</h3><table><tr><th>ID</th><th>Sigla</th></tr>';
-	global $wpdb;
-	$table_name = $wpdb->prefix . "fmprev_cable_types";
-	$result = $wpdb->get_results("select * from ".$wpdb->prefix . "fmprev_cable_types");
-	
-	foreach ( $result as $r ) 
-	{
-		echo '<tr><td>'.$r->id.'</td>';
-  		echo '<td>'.$r->sigla.'</td></tr>';
-  	}	
-	echo '</table></div>';
-	echo '<div class="wrap"><h3>Aggiungi cavo</h3>';
-	$email_form = '<form method="post" action="' . get_permalink() . '">
-    <div>
-        <label for="sigla">Sigla nuovo cavo:</label>
-        <input type="text" name="sigla" id="sigla" size="50" maxlength="50" />
-    </div>
-      <div>
-        <input type="submit" value="Aggiungi" name="send" id="new_send" />
-    </div>
-</form>';
-
-	echo $email_form;
-	echo '</div>';
+	require 'fmprevent-plugin-admin.php';
 }
+
+
+if (!is_admin())
+	add_action( 'wp_enqueue_scripts','your_css_and_js');
+
+	add_action( 'admin_enqueue_scripts','adminjs');
+
+function your_css_and_js() {
+wp_register_style('fmprev_prev', plugins_url('prev.css',__FILE__ ));
+wp_register_style('fmprev_jqui', 'https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css');
+
+wp_enqueue_style('fmprev_prev');
+wp_enqueue_style('fmprev_jqui');
+//wp_register_script('jquijs', "https://code.jquery.com/ui/1.10.4/jquery-ui.js",null,NULL,true);
+//wp_register_script( 'underscore', plugins_url('js/underscore-min.js',__FILE__ ),false,NULL,true);
+//wp_register_script( 'backbone', plugins_url('js/backbone-min.js',__FILE__ ),false,NULL,true);
+wp_register_script( 'handlebars', plugins_url('js/handlebars.js',__FILE__ ),false,NULL,true);
+wp_register_script( 'fmprev', plugins_url('js/script.js',__FILE__ ),false,NULL,true);
+wp_enqueue_script('jquery-ui-autocomplete');
+wp_enqueue_script('underscore');
+wp_enqueue_script('backbone');
+wp_enqueue_script('handlebars');
+wp_enqueue_script('fmprev');
+}
+
+function adminjs($hook){
+global $pw_settings_page;
+ if( $pw_settings_page != $hook )
+        return;
+wp_register_style('bootstrapcss', plugins_url('css/bootstrap.min.css',__FILE__ ));
+
+wp_enqueue_style('bootstrapcss');
+
+	wp_enqueue_script('jquery');
+wp_register_script('bootstrapjs', plugins_url('js/bootstrap.min.js',__FILE__ ),null,NULL,true);
+wp_register_script('datatables', plugins_url('js/dataTables.min.js',__FILE__ ),array( 'jquery'),NULL,true);
+wp_register_script('dtpaging', plugins_url('js/tablepaging.js',__FILE__ ),null,NULL,true);
+	wp_enqueue_script('bootstrapjs');
+		wp_enqueue_script('datatables');
+wp_enqueue_script('dtpaging');
+
+}
+
 ?>
