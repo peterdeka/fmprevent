@@ -7,6 +7,7 @@
     FMPrevent.Views={};
     FMPrevent.Templates={};
     FMPrevent.Models.Connector = Backbone.Model.extend();
+    FMPrevent.Collections.Connectors = Backbone.Collection.extend();
 
     Handlebars.registerHelper('if_eq', function(a, b, opts) {
     if(a == b) // Or === depending on your needs
@@ -15,6 +16,18 @@
         return opts.inverse(this);
 });
 
+Backbone.Model.prototype.toJSON = function() {
+ 
+        var clone = _.clone(this.attributes);
+        _.each(clone, function (attr, idx) {
+          if(attr.toJSON){
+            clone[idx] = attr.toJSON();
+          }
+          
+        });
+        return clone;
+      
+};
 
    FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" style="position:absolute;top:214px;left:390px"><input type="text" id="cable-length" placeholder="lunghezza">'+
       '<input type="text" id="cable-sig-r" placeholder="siglatura dx" size="12"> <input type="text" id="cable-sig-l" placeholder="siglatura sx" size="12">'+
@@ -44,16 +57,16 @@
           side:'n',
           type:'n',
           n_conns:0,
-          conns:[]
+          conns: new FMPrevent.Collections.Connectors({model:FMPrevent.Models.Connector})
       },
 
       initialize: function(){
-        var connectors=[];
+        
         for(i=0;i<this.get('n_conns');i++){
             var c=new FMPrevent.Models.Connector({idx:i+1,n_conns:this.get('n_conns'),side:this.get('side'),type:'puntale',label:''});
-            connectors.push(c); 
+            this.get('conns').push(c); 
         }
-        this.set('connectors',connectors);
+        
     }
 
 });
@@ -64,8 +77,17 @@
 
         var a=this.get('type').split('-');
         this.set('n_wires',parseInt(a[a.length-1]));
-        this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:this.get('n_wires'),conns:[]}));
-        this.set('left_end',new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:this.get('n_wires'),conns:[]}));
+        this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:this.get('n_wires'),conns:new FMPrevent.Collections.Connectors({model:FMPrevent.Models.Connector})}));
+        this.set.('left_end',new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:this.get('n_wires'),conns:new FMPrevent.Collections.Connectors({model:FMPrevent.Models.Connector})}));
+
+    },
+
+    getJSON: function(){
+
+      var j=this;
+      j.r=this.get('right_end').toJSON();
+      j.l=this.get('left_end').toJSON();
+      return j.toJSON();
 
     }
 
@@ -129,7 +151,8 @@
         var html=FMPrevent.Templates.FreeCables(this.model.toJSON());
         this.$el.html(html);
         var me=this.$el.find('div.conn-container');
-        _.each(this.model.get('connectors'),function(el){
+        _.each(this.model.get('conns'),function(el){
+            console.log(this.model.get('conns'));
             var v=new FMPrevent.Views.Connector({model:el});
             me.append(v.render().$el);
         });
@@ -201,36 +224,15 @@ change_cable_length: function(){
     this.model.set('t_length',this.$el.find("#cable-length").val());
 
 },
+
+
 });
 
 thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable({type:cable_types[0]})});
+jQuery('#sendorder').click(function(){
 
+      var a=thecable.model.getJSON();
+      jQuery.post('',a);
+
+});
 })();
-
-
-
-// And this is the definition of the custom function 
-function get_and_render(tmpl_name, tmpl_data) {
-    if ( !render.tmpl_cache ) { 
-        render.tmpl_cache = {};
-    }
-
-    if ( ! render.tmpl_cache[tmpl_name] ) {
-        var tmpl_dir = 'tpls';
-        var tmpl_url = tmpl_dir + '/' + tmpl_name + '.html';
-
-        var tmpl_string;
-        $.ajax({
-            url: tmpl_url,
-            method: 'GET',
-            async: false,
-            success: function(data) {
-                tmpl_string = data;
-            }
-        });
-
-        render.tmpl_cache[tmpl_name] = Handlebars.compile(tmpl_string);
-    }
-
-    return render.tmpl_cache[tmpl_name](tmpl_data);
-}
