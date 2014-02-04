@@ -77,8 +77,8 @@ Backbone.Model.prototype.toJSON = function() {
 
         var a=this.get('type').split('-');
         this.set('n_wires',parseInt(a[a.length-1]));
-        this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:this.get('n_wires'),conns:new FMPrevent.Collections.Connectors({model:FMPrevent.Models.Connector})}));
-        this.set.('left_end',new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:this.get('n_wires'),conns:new FMPrevent.Collections.Connectors({model:FMPrevent.Models.Connector})}));
+        this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:this.get('n_wires'),conns: FMPrevent.Collections.Connectors({model:FMPrevent.Models.Connector})}));
+        this.set.('left_end',new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:this.get('n_wires'),conns: FMPrevent.Collections.Connectors({model:FMPrevent.Models.Connector})}));
 
     },
 
