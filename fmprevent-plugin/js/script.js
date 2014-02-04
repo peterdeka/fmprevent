@@ -203,8 +203,6 @@ change_cable_length: function(){
 },
 });
 
-cable_types=['HEF-3','HEF-4','HEF-5'];
-
 thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable({type:cable_types[0]})});
 
 })();
