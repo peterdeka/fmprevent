@@ -16,10 +16,10 @@
 });
 
 
-    FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" style="position:absolute;top:214px;left:390px"><input type="text" id="cable-length" placeholder="lunghezza">'+
-      '<input type="text" id="cable-sig-r" placeholder="siglatura dx"> <input type="text" id="cable-sig-l" placeholder="siglatura sx">'+
+   FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" style="position:absolute;top:214px;left:390px"><input type="text" id="cable-length" placeholder="lunghezza">'+
+      '<input type="text" id="cable-sig-r" placeholder="siglatura dx" size="12"> <input type="text" id="cable-sig-l" placeholder="siglatura sx" size="12">'+
   '<img src="../wp-content/plugins/fmprevent-plugin/images/cavo_blu.png" >'+
-  '<input type="text" id="cable-type"  placeholder="tipo cavo" ></div>');
+  '<input type="text" id="cable-type" placeholder="tipo cavo" ></div><div id="orderform">Nome:<input type="text" name="name" id="order_name">Email:<input type="email" name="mail" id="order_mail">Messaggio(opzionale):<input type="text" name="message" id="order_message"><button id="sendorder">Invia ordine</button></div>');
 
   FMPrevent.Templates.Connector=Handlebars.compile('<div class="conn conn-{{side}} conn-{{idx}}-of-{{n_conns}}" style="background-image:url(../wp-content/plugins/fmprevent-plugin/images/connettori/connettore_{{type}}_{{side}}.png)">'+
       '<input class="conn-label" type="text" placeholder="siglatura" value="{{label}}" size="12">'+
@@ -32,7 +32,7 @@
     '</div>');
 
     FMPrevent.Templates.FreeCables=Handlebars.compile('<div class="free-cables free-cables-{{side}} free-cables-{{n_conns}}" style="background-image:url(../wp-content/plugins/fmprevent-plugin/images/cavi/{{n_conns}}_cavi_{{side}}.png)">'+
-        '<input type="text" class="cable-sgua" placeholder="sguainatura">'+
+        '<input type="text" class="cable-sgua" placeholder="sguainatura" size="12">'+
         '<div class="conn-container">'+
         '</div>'+
         '</div>');

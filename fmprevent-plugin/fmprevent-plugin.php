@@ -34,6 +34,51 @@ function fmprev_db_install() {
    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
    dbDelta( $sql );
  
+   $table_name = $wpdb->prefix . "fmprev_cable_orders";
+      
+   $sql = "CREATE TABLE $table_name (
+  id mediumint(9) NOT NULL AUTO_INCREMENT,
+  email VARCHAR(200) NOT NULL,
+  cust_name VARCHAR(200) NOT NULL,
+  message TEXT DEFAULT '',
+  cable_model mediumint(9) NOT NULL, /*FK*/
+  length float NOT NULL,
+  sig_r VARCHAR(20) DEFAULT '',
+  sig_l VARCHAR(20) DEFAULT '',
+  UNIQUE KEY id (id)
+    );";
+
+   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+   dbDelta( $sql );
+
+$table_name = $wpdb->prefix . "fmprev_cable_ends";
+      
+   $sql = "CREATE TABLE $table_name (
+  id mediumint(9) NOT NULL AUTO_INCREMENT,
+  cable_id mediumint(9) NOT NULL,  /*FK*/
+  type VARCHAR(60) NOT NULL,
+  side VARCHAR(2) NOT NULL,
+  sgua float NOT NULL,
+  UNIQUE KEY id (id)
+    );";
+
+   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+   dbDelta( $sql );
+
+   $table_name = $wpdb->prefix . "fmprev_cable_connectors";
+      
+   $sql = "CREATE TABLE $table_name (
+  id mediumint(9) NOT NULL AUTO_INCREMENT,
+  cable_end_id mediumint(9) NOT NULL,  /*FK*/
+  type VARCHAR(60) NOT NULL,
+  sig VARCHAR(60) DEFAULT '',
+  side VARCHAR(2) NOT NULL,
+  position integer NOT NULL,
+  UNIQUE KEY id (id)
+    );";
+
+   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+   dbDelta( $sql );
    add_option( "fmprev_db_version", $fmprev_db_version );
 }
 

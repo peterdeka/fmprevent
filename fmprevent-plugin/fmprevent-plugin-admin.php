@@ -22,56 +22,56 @@ if ( !current_user_can( 'manage_options' ) )  {
 			<div class="tab-content">
 				<div class="tab-pane active" id="editdb">
 					<div class="row"><div class="col-md-8">
-					<h4>Da qui puoi visualizzare i modelli di cavo inseriti ed aggiungerne nuovi.</h4>
-			<?php
-			if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-				$error = false;
-				global $wpdb;
-				$table_name = $wpdb->prefix . "fmprev_cable_types";
+						<h4>Da qui puoi visualizzare i modelli di cavo inseriti ed aggiungerne nuovi.</h4>
+						<?php
+						if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+							$error = false;
+							global $wpdb;
+							$table_name = $wpdb->prefix . "fmprev_cable_types";
 
-				if($wpdb->insert( $table_name, array( 'sigla' => $_POST['sigla'] ) )>0){
-					echo '<p style="background-color:white;color:green;font-weight:Bold">Nuovo elemento con sigla '.$_POST['sigla'].' inserito con successo.</p>';
-				}
-				else{
-					echo '<p style="background-color:white;color:red;font-weight:Bold">Errore durante l\'inserimento del nuovo elemento.</p>';
-				}
-			}
-			?>
-		</div></div>
+							if($wpdb->insert( $table_name, array( 'sigla' => $_POST['sigla'] ) )>0){
+								echo '<span class="label label-success">Elemento inserito con successo.</span>';
+							}
+							else{
+								echo '<span class="label label-error">SuccessErrore durante l\'inserimento del nuovo elemento.</span>';
+							}
+						}
+						?>
+					</div></div>
 
-			<?php
+					<?php
 
-			/*LISTA cavi inseriti*/
-			echo '<div class="row"><div class="col-md-9"><h3>Cavi inseriti</h3><table id="cabletable" class="table data-table"><thead><tr><th>ID</th><th>Sigla</th></tr></thead><tbody>';
-			global $wpdb;
-			$table_name = $wpdb->prefix . "fmprev_cable_types";
-			$result = $wpdb->get_results("select * from ".$wpdb->prefix . "fmprev_cable_types");
+					/*LISTA cavi inseriti*/
+					echo '<div class="row"><div class="col-md-9"><h3>Cavi inseriti</h3><table id="cabletable" class="table data-table"><thead><tr><th>ID</th><th>Sigla</th></tr></thead><tbody>';
+					global $wpdb;
+					$table_name = $wpdb->prefix . "fmprev_cable_types";
+					$result = $wpdb->get_results("select * from ".$wpdb->prefix . "fmprev_cable_types");
 
-			foreach ( $result as $r ) 
-			{
-				echo '<tr><td>'.$r->id.'</td>';
-				echo '<td>'.$r->sigla.'</td></tr>';
-			}	
-			echo '</tbody></table></div>';
-			echo '<div class="col-md-3"><h3>Aggiungi cavo</h3>';
-			$email_form = '<form method="post" action="' . get_permalink() . '">
-			<div>
-			<label for="sigla">Sigla nuovo cavo:</label>
-			<input type="text" name="sigla" id="sigla" size="50" maxlength="50" />
-			</div>
-			<div>
-			<input type="submit" value="Aggiungi" name="send" id="new_send" />
-			</div>
-			</form>';
+					foreach ( $result as $r ) 
+					{
+						echo '<tr><td>'.$r->id.'</td>';
+						echo '<td>'.$r->sigla.'</td></tr>';
+					}	
+					echo '</tbody></table></div>';
+					echo '<div class="col-md-3"><h3>Aggiungi cavo</h3>';
+					$email_form = '<form method="post" action="' . get_permalink() . '">
+					<div>
+					<label for="sigla">Sigla nuovo cavo:</label>
+					<input type="text" name="sigla" id="sigla" size="50" maxlength="50" />
+					</div>
+					<div>
+					<input type="submit" value="Aggiungi" name="send" id="new_send" />
+					</div>
+					</form>';
 
-			echo $email_form;
-			echo '</div></div>';
+					echo $email_form;
+					echo '</div></div>';
 
-			?>
-			</div>
-			<div class="tab-pane" id="orders"></div>
+					?>
+				</div>
+				<div class="tab-pane" id="orders"></div>
 				
 			</div>
 		</div>
-		</div>
-		</div>
+	</div>
+</div>

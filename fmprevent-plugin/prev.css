@@ -11,6 +11,7 @@ input[type="text"]{
 
 .free-cables{
 	position:absolute;width:195px;
+	background-repeat: no-repeat;
 }
 
 .free-cables-r{
@@ -170,3 +171,8 @@ position:absolute;top:300px;left:0px
 	right:100px;top:10px;position:absolute;
 }
 
+#orderform{
+	position: absolute;
+bottom: 0px;
+margin: 30px;
+}
