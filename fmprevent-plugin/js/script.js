@@ -7,7 +7,7 @@
     FMPrevent.Views={};
     FMPrevent.Templates={};
     FMPrevent.Models.Connector = Backbone.Model.extend();
-    FMPrevent.Collections.Connectors = Backbone.Collection.extend();
+    FMPrevent.Collections.Connectors = Backbone.Collection.extend({model:FMPrevent.Models.Connector});
 
     Handlebars.registerHelper('if_eq', function(a, b, opts) {
     if(a == b) // Or === depending on your needs
@@ -62,11 +62,13 @@ Backbone.Model.prototype.toJSON = function() {
 
       initialize: function(){
         
+        var conns=new FMPrevent.Collections.Connectors();
         for(i=0;i<this.get('n_conns');i++){
-            var c=new FMPrevent.Models.Connector({idx:i+1,n_conns:this.get('n_conns'),side:this.get('side'),type:'puntale',label:''});
-            this.get('conns').push(c); 
+           
+            conns.push(new FMPrevent.Models.Connector({idx:i+1,n_conns:this.get('n_conns'),side:this.get('side'),type:'puntale',label:''})); 
+            
         }
-        
+        this.set('conns',conns);
     }
 
 });
@@ -77,20 +79,12 @@ Backbone.Model.prototype.toJSON = function() {
 
         var a=this.get('type').split('-');
         this.set('n_wires',parseInt(a[a.length-1]));
-        this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:this.get('n_wires'),conns: FMPrevent.Collections.Connectors({model:FMPrevent.Models.Connector})}));
-        this.set.('left_end',new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:this.get('n_wires'),conns: FMPrevent.Collections.Connectors({model:FMPrevent.Models.Connector})}));
-
-    },
-
-    getJSON: function(){
-
-      var j=this;
-      j.r=this.get('right_end').toJSON();
-      j.l=this.get('left_end').toJSON();
-      return j.toJSON();
+        this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:this.get('n_wires')}));
+        this.set('left_end',new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:this.get('n_wires')}));
 
     }
 
+   
 });
 
 
@@ -105,12 +99,12 @@ Backbone.Model.prototype.toJSON = function() {
 
         initialize: function(){
 
+          _.bindAll(this, 'render');
 
         },
 
         render: function(){
 
-            //var html = get_and_render('connview',this.model.toJSON());
             var html=FMPrevent.Templates.Connector(this.model.toJSON());
             this.$el.html(html);
             return this;
@@ -142,6 +136,7 @@ Backbone.Model.prototype.toJSON = function() {
 
       initialize: function(){
 
+        _.bindAll(this, 'render');
 
       },
 
@@ -151,11 +146,13 @@ Backbone.Model.prototype.toJSON = function() {
         var html=FMPrevent.Templates.FreeCables(this.model.toJSON());
         this.$el.html(html);
         var me=this.$el.find('div.conn-container');
-        _.each(this.model.get('conns'),function(el){
-            console.log(this.model.get('conns'));
+        //_.each(this.model.get('conns'),function(el){
+          for(i=0;i<this.model.get('conns').length;i++){
+            var el=this.model.get('conns').at(i);
             var v=new FMPrevent.Views.Connector({model:el});
             me.append(v.render().$el);
-        });
+          }
+        //});
         return this;
 
     },
