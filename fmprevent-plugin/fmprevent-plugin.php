@@ -16,7 +16,7 @@ add_shortcode( 'fmprevent-plugin', 'do_the_page' );
 
 function do_the_page(){
 
-	require 'fmprevent-plugin-front.php';
+  require 'fmprevent-plugin-front.php';
 }
 
 function fmprev_db_install() {
@@ -34,51 +34,6 @@ function fmprev_db_install() {
    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
    dbDelta( $sql );
  
-   $table_name = $wpdb->prefix . "fmprev_cable_orders";
-      
-   $sql = "CREATE TABLE $table_name (
-  id mediumint(9) NOT NULL AUTO_INCREMENT,
-  email VARCHAR(200) NOT NULL,
-  cust_name VARCHAR(200) NOT NULL,
-  message TEXT DEFAULT '',
-  cable_model mediumint(9) NOT NULL, /*FK*/
-  length float NOT NULL,
-  sig_r VARCHAR(20) DEFAULT '',
-  sig_l VARCHAR(20) DEFAULT '',
-  UNIQUE KEY id (id)
-    );";
-
-   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-   dbDelta( $sql );
-
-$table_name = $wpdb->prefix . "fmprev_cable_ends";
-      
-   $sql = "CREATE TABLE $table_name (
-  id mediumint(9) NOT NULL AUTO_INCREMENT,
-  cable_id mediumint(9) NOT NULL,  /*FK*/
-  type VARCHAR(60) NOT NULL,
-  side VARCHAR(2) NOT NULL,
-  sgua float NOT NULL,
-  UNIQUE KEY id (id)
-    );";
-
-   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-   dbDelta( $sql );
-
-   $table_name = $wpdb->prefix . "fmprev_cable_connectors";
-      
-   $sql = "CREATE TABLE $table_name (
-  id mediumint(9) NOT NULL AUTO_INCREMENT,
-  cable_end_id mediumint(9) NOT NULL,  /*FK*/
-  type VARCHAR(60) NOT NULL,
-  sig VARCHAR(60) DEFAULT '',
-  side VARCHAR(2) NOT NULL,
-  position integer NOT NULL,
-  UNIQUE KEY id (id)
-    );";
-
-   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-   dbDelta( $sql );
    add_option( "fmprev_db_version", $fmprev_db_version );
 }
 
@@ -97,21 +52,23 @@ add_action( 'admin_menu', 'fmprevent_menu' );
 
 /** Step 1. */
 function fmprevent_menu() {
-	global $pw_settings_page;
-	$pw_settings_page = add_menu_page( 'Preventivatore FMGroup', 'Preventivatore FM', 'manage_options', 'fmprevent_admin', 'fmprevent_options' );
+  global $pw_settings_page;
+  $pw_settings_page = add_menu_page( 'Preventivatore FMGroup', 'Preventivatore FM', 'manage_options', 'fmprevent_admin', 'fmprevent_options' );
 }
 
 /** Step 3. */
 function fmprevent_options() {
 
-	require 'fmprevent-plugin-admin.php';
+  require 'fmprevent-plugin-admin.php';
 }
 
 
 if (!is_admin())
-	add_action( 'wp_enqueue_scripts','your_css_and_js');
+  add_action( 'wp_enqueue_scripts','your_css_and_js');
+else
+  add_action( 'admin_enqueue_scripts','adminjs');
 
-	add_action( 'admin_enqueue_scripts','adminjs');
+require_once 'ajax-actions.php';
 
 function your_css_and_js() {
 wp_register_style('fmprev_prev', plugins_url('prev.css',__FILE__ ));
@@ -124,6 +81,8 @@ wp_enqueue_style('fmprev_jqui');
 //wp_register_script( 'backbone', plugins_url('js/backbone-min.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'handlebars', plugins_url('js/handlebars.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'fmprev', plugins_url('js/script.js',__FILE__ ),false,NULL,true);
+wp_localize_script( 'fmprev', 'ajax_object',
+            array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 wp_enqueue_script('jquery-ui-autocomplete');
 wp_enqueue_script('underscore');
 wp_enqueue_script('backbone');
@@ -139,12 +98,12 @@ wp_register_style('bootstrapcss', plugins_url('css/bootstrap.min.css',__FILE__ )
 
 wp_enqueue_style('bootstrapcss');
 
-	wp_enqueue_script('jquery');
+  wp_enqueue_script('jquery');
 wp_register_script('bootstrapjs', plugins_url('js/bootstrap.min.js',__FILE__ ),null,NULL,true);
 wp_register_script('datatables', plugins_url('js/dataTables.min.js',__FILE__ ),array( 'jquery'),NULL,true);
 wp_register_script('dtpaging', plugins_url('js/tablepaging.js',__FILE__ ),null,NULL,true);
-	wp_enqueue_script('bootstrapjs');
-		wp_enqueue_script('datatables');
+  wp_enqueue_script('bootstrapjs');
+    wp_enqueue_script('datatables');
 wp_enqueue_script('dtpaging');
 
 }

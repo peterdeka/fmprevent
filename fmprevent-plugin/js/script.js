@@ -228,8 +228,8 @@ change_cable_length: function(){
 thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable({type:cable_types[0]})});
 jQuery('#sendorder').click(function(){
 
-      var a=thecable.model.getJSON();
-      jQuery.post('',a);
+      var a=thecable.model.toJSON();
+      jQuery.post(ajax_object.ajax_url,{action:'add_order',order:JSON.stringify(a)}).done(function(data){jQuery('#fmprevent').html(data);});
 
 });
 })();
