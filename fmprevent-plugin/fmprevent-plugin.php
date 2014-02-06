@@ -92,9 +92,7 @@ wp_register_style('fmprev_jqui', 'https://code.jquery.com/ui/1.10.4/themes/smoot
 
 wp_enqueue_style('fmprev_prev');
 wp_enqueue_style('fmprev_jqui');
-//wp_register_script('jquijs', "https://code.jquery.com/ui/1.10.4/jquery-ui.js",null,NULL,true);
-//wp_register_script( 'underscore', plugins_url('js/underscore-min.js',__FILE__ ),false,NULL,true);
-//wp_register_script( 'backbone', plugins_url('js/backbone-min.js',__FILE__ ),false,NULL,true);
+
 wp_register_script( 'handlebars', plugins_url('js/handlebars.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'fmprev', plugins_url('js/prevent.js',__FILE__ ),false,NULL,true);
 wp_localize_script( 'fmprev', 'ajax_object',
@@ -112,21 +110,31 @@ function adminjs($hook){
 global $pw_settings_page;
  if( $pw_settings_page != $hook )
         return;
+    wp_register_style('fmprev_prev', plugins_url('prev.css',__FILE__ ));
+wp_register_style('fmprev_jqui', 'https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css');
+
+wp_enqueue_style('fmprev_prev');
+wp_enqueue_style('fmprev_jqui');
 wp_register_style('bootstrapcss', plugins_url('css/bootstrap.min.css',__FILE__ ));
 
 wp_enqueue_style('bootstrapcss');
 
   wp_enqueue_script('jquery');
+  wp_register_script( 'handlebars', plugins_url('js/handlebars.js',__FILE__ ),false,NULL,true);
 wp_register_script('bootstrapjs', plugins_url('js/bootstrap.min.js',__FILE__ ),null,NULL,true);
 wp_register_script('datatables', plugins_url('js/dataTables.min.js',__FILE__ ),array( 'jquery'),NULL,true);
 wp_register_script('dtpaging', plugins_url('js/tablepaging.js',__FILE__ ),null,NULL,true);
 wp_register_script( 'fmprev', plugins_url('js/prevent.js',__FILE__ ),false,NULL,true);
-
+wp_register_script( 'html2canvas', plugins_url('js/html2canvas.js',__FILE__ ),false,NULL,true);
   wp_enqueue_script('bootstrapjs');
     wp_enqueue_script('datatables');
 wp_enqueue_script('dtpaging');
-wp_enqueue_script( 'fmprev');
 
+wp_enqueue_script('underscore');
+wp_enqueue_script('backbone');
+wp_enqueue_script('handlebars');
+wp_enqueue_script( 'fmprev');
+wp_enqueue_script( 'html2canvas');
 }
 
 ?>

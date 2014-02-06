@@ -82,6 +82,18 @@ Backbone.Model.prototype.toJSON = function() {
         this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:this.get('n_wires')}));
         this.set('left_end',new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:this.get('n_wires')}));
 
+    },
+
+    loadJSON: function(jso){
+      this.set('type',jso.type);
+      this.set('n_wires',jso.n_wires);
+      var jsor=jso.right_end;
+      this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:jsor.type,n_conns:jsor.n_conns,conns:new FMPrevent.Collections.Connectors(jsor.conns)}));
+      var jsor=jso.left_end;
+      this.set('left_end',new FMPrevent.Models.CableEnd({side:'l',type:jsor.type,n_conns:jsor.n_conns,conns:new FMPrevent.Collections.Connectors(jsor.conns)}));
+
+
+
     }
 
    
@@ -197,9 +209,11 @@ Backbone.Model.prototype.toJSON = function() {
     var vl=new FMPrevent.Views.CableEnd({model:this.model.get('left_end')});
     this.$el.append(vl.render().$el);
     var me=this;
+    if('undefined' !== typeof cable_types){
     this.$el.find("#cable-type").autocomplete({
         source: cable_types
      }).val(this.model.get('type'));
+    }
 },
 
 change_cable_model:  function(e, ui){

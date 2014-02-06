@@ -7,6 +7,7 @@ if(is_admin()){
 	add_action( 'wp_ajax_add_cabletypes', 'add_cable_type' );
 	add_action( 'wp_ajax_del_cabletypes', 'del_cable_type' );
 	add_action( 'wp_ajax_get_orders', 'get_orders' );
+	add_action( 'wp_ajax_get_order_info', 'get_order_info' );
 }
 
 function test_input($data)
@@ -143,13 +144,13 @@ function get_orders(){
 
 	global $wpdb;
 	$table_name = $wpdb->prefix . "fmprev_orders";
-	$result = $wpdb->get_results("select * from ".$table_name);
+	$result = $wpdb->get_results("select id,name,quantity from ".$table_name);
 	$jstr='{"orders":[';
 
 	foreach ( $result as $r ) 
 	{
 
-		$jstr.='{"id":'.$r->id.',"name":"'.$r->name.'"},';
+		$jstr.='{"id":'.$r->id.',"name":"'.$r->name.'","quantity":'.$r->quantity.'},';
 
 	}
 	if(count($result)>0)	
@@ -160,5 +161,30 @@ function get_orders(){
 	echo json_encode($jstr);
 	die();
 }
+
+
+function get_order_info(){
+
+	global $wpdb;
+	$id=$_POST['id'];
+	$table_name = $wpdb->prefix . "fmprev_orders";
+	$result = $wpdb->get_results("select * from ".$table_name.' WHERE id='.$id);
+	if(!$result){
+		echo 'not found';
+		die();
+	}
+	$res=$result[0];
+	$cable=$res->json_cable;
+	unset($res->json_cable);
+	$ret=json_decode($cable);
+	$ret->info=$res;
+	
+	
+	echo json_encode($ret);
+	
+	
+	die();
+}
+
 
 ?>

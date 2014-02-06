@@ -15,7 +15,7 @@ if ( !current_user_can( 'manage_options' ) )  {
 			<!-- Nav tabs -->
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#editdb" data-toggle="tab">Gestione cavi</a></li>
-				<li><a href="#orders" data-toggle="tab">Oridni</a></li>
+				<li><a href="#orders" data-toggle="tab">Ordini</a></li>
 
 			</ul>
 			<!-- Tab panes -->
@@ -45,7 +45,10 @@ if ( !current_user_can( 'manage_options' ) )  {
 					</div></div>
 					
 				</div>
-				<div class="tab-pane" id="orders"></div>
+				<div class="tab-pane" id="orders">
+
+					<?php include 'orders-page.php'; ?>
+				</div>
 				
 			</div>
 		</div>
