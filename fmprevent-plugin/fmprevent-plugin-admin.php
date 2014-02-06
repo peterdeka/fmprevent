@@ -23,51 +23,27 @@ if ( !current_user_can( 'manage_options' ) )  {
 				<div class="tab-pane active" id="editdb">
 					<div class="row"><div class="col-md-8">
 						<h4>Da qui puoi visualizzare i modelli di cavo inseriti ed aggiungerne nuovi.</h4>
-						<?php
-						if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-							$error = false;
-							global $wpdb;
-							$table_name = $wpdb->prefix . "fmprev_cable_types";
-
-							if($wpdb->insert( $table_name, array( 'sigla' => $_POST['sigla'] ) )>0){
-								echo '<span class="label label-success">Elemento inserito con successo.</span>';
-							}
-							else{
-								echo '<span class="label label-error">SuccessErrore durante l\'inserimento del nuovo elemento.</span>';
-							}
-						}
-						?>
+						<div id="msgarea" style="font-size:17px"></div>
+					
 					</div></div>
 
-					<?php
-
-					/*LISTA cavi inseriti*/
-					echo '<div class="row"><div class="col-md-9"><h3>Cavi inseriti</h3><table id="cabletable" class="table data-table"><thead><tr><th>ID</th><th>Sigla</th></tr></thead><tbody>';
-					global $wpdb;
-					$table_name = $wpdb->prefix . "fmprev_cable_types";
-					$result = $wpdb->get_results("select * from ".$wpdb->prefix . "fmprev_cable_types");
-
-					foreach ( $result as $r ) 
-					{
-						echo '<tr><td>'.$r->id.'</td>';
-						echo '<td>'.$r->sigla.'</td></tr>';
-					}	
-					echo '</tbody></table></div>';
-					echo '<div class="col-md-3"><h3>Aggiungi cavo</h3>';
-					$email_form = '<form method="post" action="' . get_permalink() . '">
+			
+					<div class="row"><div class="col-md-9"><h3>Cavi inseriti</h3><table id="cabletable" class="table data-table"><thead><tr><th>ID</th><th>Sigla</th><th>azioni</th></tr></thead><tbody>
+					</tbody></table></div>
+					<div class="col-md-3"><h3>Aggiungi cavo</h3>
+					
 					<div>
 					<label for="sigla">Sigla nuovo cavo:</label>
-					<input type="text" name="sigla" id="sigla" size="50" maxlength="50" />
+					<input type="text" name="sigla" id="newsigla" size="50" maxlength="50" />
 					</div>
 					<div>
-					<input type="submit" value="Aggiungi" name="send" id="new_send" />
+					<button  type="button" class="btn btn-primary" id="new_send">Aggiungi</button>
 					</div>
-					</form>';
+					
 
-					echo $email_form;
-					echo '</div></div>';
-
-					?>
+					
+					</div></div>
+					
 				</div>
 				<div class="tab-pane" id="orders"></div>
 				
@@ -75,3 +51,66 @@ if ( !current_user_can( 'manage_options' ) )  {
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+reload_table=function(tblid){
+		jQuery.post(ajaxurl,{action:'get_cabletypes'}).done(function(data){
+		if(oTable != null)oTable.fnDestroy();
+		var tb=jQuery(tblid+" tbody");
+		tb.html('');
+		var d=data.replace(/\\/g, '');
+		d=d.substring(1,d.length-1);
+		var d = JSON.parse(d);
+		jQuery.each(d.cabletypes,function(i,el){
+
+			tb.append('<tr><td>'+el.id+'</td><td>'+el.sigla+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');
+
+		});
+    	
+    	jQuery(tblid+' .delrow').click(function(ev){
+    		var sig=jQuery(ev.target).parent('td').siblings().last().html();
+			var r=jQuery.post(ajaxurl,{action:'del_cabletypes',type:sig});
+			r.done(function(data){
+				if(data=='OK'){
+					jQuery('#msgarea').html('<span class="label label-success">'+sig+' ELIMINATO con successo.</span>');
+				reload_table('#cabletable');
+				}
+				else
+					jQuery('#msgarea').html('<span class="label label-danger">Errore durante l\'eliminazione dell\'elemento.</span>');
+			});
+    	});
+
+    	//load table
+    	oTable = jQuery(tblid).dataTable({
+    		"iDisplayStart": 10,
+    		"aLengthMenu": [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    		"sPaginationType": "bootstrap"
+    	});
+
+    });
+};
+
+jQuery(document).ready(function($) {
+	oTable=null;
+	reload_table('#cabletable');
+
+	$('#new_send').click(function(){
+
+		var r=$.post(ajaxurl,{action:'add_cabletypes',newtype:$('#newsigla').val()});
+		r.done(function(data){
+			if(data=='OK'){
+				$('#msgarea').html('<span class="label label-success">Elemento inserito con successo.</span>');
+				reload_table('#cabletable');
+			}
+			else if(data=='AX')
+				$('#msgarea').html('<span class="label label-warning">Attenzione l\'elemento è già esistente.</span>');
+			else
+				$('#msgarea').html('<span class="label label-danger">Errore durante l\'inserimento del nuovo elemento.</span>');
+		});
+	});
+
+
+});
+
+
+
+</script>
