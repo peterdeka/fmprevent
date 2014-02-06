@@ -56,10 +56,11 @@ reload_table=function(tblid){
 		jQuery.post(ajaxurl,{action:'get_cabletypes'}).done(function(data){
 		if(oTable != null)oTable.fnDestroy();
 		var tb=jQuery(tblid+" tbody");
-		tb.html('');
+		tb.html('<tr><td>Loading...</td><td>Loading...</td><td>Loading...</td></tr>');
 		var d=data.replace(/\\/g, '');
 		d=d.substring(1,d.length-1);
 		var d = JSON.parse(d);
+		tb.html('');
 		jQuery.each(d.cabletypes,function(i,el){
 
 			tb.append('<tr><td>'+el.id+'</td><td>'+el.sigla+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');

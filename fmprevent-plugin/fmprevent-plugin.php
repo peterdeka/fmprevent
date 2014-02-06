@@ -33,6 +33,22 @@ function fmprev_db_install() {
 
    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
    dbDelta( $sql );
+
+   $table_name = $wpdb->prefix . "fmprev_orders";
+      
+   $sql = "CREATE TABLE $table_name (
+  id mediumint(9) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(255) ,
+  msg TEXT DEFAULT '',
+  json_cable TEXT DEFAULT '' NOT NULL,
+  quantity INTEGER NOT NULL,
+  UNIQUE KEY id (id)
+    );";
+
+   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+   dbDelta( $sql );
  
    add_option( "fmprev_db_version", $fmprev_db_version );
 }
@@ -80,13 +96,15 @@ wp_enqueue_style('fmprev_jqui');
 //wp_register_script( 'underscore', plugins_url('js/underscore-min.js',__FILE__ ),false,NULL,true);
 //wp_register_script( 'backbone', plugins_url('js/backbone-min.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'handlebars', plugins_url('js/handlebars.js',__FILE__ ),false,NULL,true);
-wp_register_script( 'fmprev', plugins_url('js/script.js',__FILE__ ),false,NULL,true);
+wp_register_script( 'fmprev', plugins_url('js/prevent.js',__FILE__ ),false,NULL,true);
 wp_localize_script( 'fmprev', 'ajax_object',
             array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+wp_register_script( 'jqvalidate', plugins_url('js/jquery.validate.min.js',__FILE__ ),array( 'jquery'),NULL,true);
 wp_enqueue_script('jquery-ui-autocomplete');
 wp_enqueue_script('underscore');
 wp_enqueue_script('backbone');
 wp_enqueue_script('handlebars');
+wp_enqueue_script('jqvalidate');
 wp_enqueue_script('fmprev');
 }
 
@@ -102,9 +120,12 @@ wp_enqueue_style('bootstrapcss');
 wp_register_script('bootstrapjs', plugins_url('js/bootstrap.min.js',__FILE__ ),null,NULL,true);
 wp_register_script('datatables', plugins_url('js/dataTables.min.js',__FILE__ ),array( 'jquery'),NULL,true);
 wp_register_script('dtpaging', plugins_url('js/tablepaging.js',__FILE__ ),null,NULL,true);
+wp_register_script( 'fmprev', plugins_url('js/prevent.js',__FILE__ ),false,NULL,true);
+
   wp_enqueue_script('bootstrapjs');
     wp_enqueue_script('datatables');
 wp_enqueue_script('dtpaging');
+wp_enqueue_script( 'fmprev');
 
 }
 

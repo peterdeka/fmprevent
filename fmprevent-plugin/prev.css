@@ -6,9 +6,20 @@ input[type="text"]{
 }
 
 #fmprevent{
-	position:relative;width:880px;height:600px;
+	position:relative;width:880px;height:450px;
 }
 
+#fmprevent.fmprevent-3{
+	height:450px;
+}
+
+#fmprevent.fmprevent-4{
+	height:500px;
+}
+
+#fmprevent.fmprevent-5{
+	height:500px;
+}
 .free-cables{
 	position:absolute;width:195px;
 	background-repeat: no-repeat;
@@ -172,7 +183,12 @@ position:absolute;top:300px;left:0px
 }
 
 #orderform{
-	position: absolute;
-bottom: 0px;
+	position: relative;
+
 margin: 30px;
 }
+
+#orderform input,label {
+   margin-bottom:20px;
+}
+

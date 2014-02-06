@@ -32,7 +32,7 @@ Backbone.Model.prototype.toJSON = function() {
    FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" style="position:absolute;top:214px;left:390px"><input type="text" id="cable-length" placeholder="lunghezza">'+
       '<input type="text" id="cable-sig-r" placeholder="siglatura dx" size="12"> <input type="text" id="cable-sig-l" placeholder="siglatura sx" size="12">'+
   '<img src="../wp-content/plugins/fmprevent-plugin/images/cavo_blu.png" >'+
-  '<input type="text" id="cable-type" placeholder="tipo cavo" ></div><div id="orderform">Nome:<input type="text" name="name" id="order_name">Email:<input type="email" name="mail" id="order_mail">Messaggio(opzionale):<input type="text" name="message" id="order_message"><button id="sendorder">Invia ordine</button></div>');
+  '<input type="text" id="cable-type" placeholder="tipo cavo" ></div>');
 
   FMPrevent.Templates.Connector=Handlebars.compile('<div class="conn conn-{{side}} conn-{{idx}}-of-{{n_conns}}" style="background-image:url(../wp-content/plugins/fmprevent-plugin/images/connettori/connettore_{{type}}_{{side}}.png)">'+
       '<input class="conn-label" type="text" placeholder="siglatura" value="{{label}}" size="12">'+
@@ -186,6 +186,10 @@ Backbone.Model.prototype.toJSON = function() {
   render: function() {
 
     //var html = get_and_render('cableview',null);
+  this.$el.removeClass (function (index, css) {
+    return (css.match (/\bfmprevent-\S+/g) || []).join(' ');
+  });
+  this.$el.addClass('fmprevent-'+this.model.get('n_wires'));
     var html=FMPrevent.Templates.Cable(this.model.toJSON());
     this.$el.html(html);
     var vr=new FMPrevent.Views.CableEnd({model:this.model.get('right_end')});
@@ -225,11 +229,5 @@ change_cable_length: function(){
 
 });
 
-thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable({type:cable_types[0]})});
-jQuery('#sendorder').click(function(){
 
-      var a=thecable.model.toJSON();
-      jQuery.post(ajax_object.ajax_url,{action:'add_order',order:JSON.stringify(a)}).done(function(data){jQuery('#fmprevent').html(data);});
-
-});
 })();
