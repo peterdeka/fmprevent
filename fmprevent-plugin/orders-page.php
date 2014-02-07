@@ -15,7 +15,13 @@
 				</tbody></table></div>
 			
 			</div>
-<div id='fmprevent' style="z-index:-30"></div>
+
+
+<div id="ordercontainer" class="panel panel-default">
+<div class="panel-body">
+<div id='fmprevent' ></div>
+ </div>
+</div><div id="canvas"></div>
 <script type="text/javascript">
 reload_tableorders=function(tblid){
 		jQuery.post(ajaxurl,{action:'get_orders'}).done(function(data){
@@ -57,11 +63,19 @@ reload_tableorders=function(tblid){
 				var cab=new FMPrevent.Models.Cable({type:d.type});
 				cab.loadJSON(d);
 				thecable = new FMPrevent.Views.Cable({model:cab});
+				jQuery('#fmprevent').before(FMPrevent.Templates.OrderInfo(d.info));
+				jQuery('#fmprevent').after('<button id="printbtn" class="btn btn-primary">Stampa</button>');
+				jQuery('#printbtn').click(function(){
 				html2canvas(jQuery('#fmprevent')[0], {
-  onrendered: function(canvas) {
-    document.body.appendChild(canvas);
-  }
-});
+  				onrendered: function(canvas) {
+   				 jQuery('#canvas').html('').append(canvas);
+    			var oCanvas = jQuery('canvas')[0];  
+					Canvas2Image.saveAsPNG(oCanvas); 
+  				}
+			});
+
+				});
+				/**/
 			});
     	});
 

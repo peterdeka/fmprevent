@@ -126,6 +126,10 @@ wp_register_script('datatables', plugins_url('js/dataTables.min.js',__FILE__ ),a
 wp_register_script('dtpaging', plugins_url('js/tablepaging.js',__FILE__ ),null,NULL,true);
 wp_register_script( 'fmprev', plugins_url('js/prevent.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'html2canvas', plugins_url('js/html2canvas.js',__FILE__ ),false,NULL,true);
+wp_register_script( 'canvas2image', plugins_url('js/canvas2image.js',__FILE__ ),false,NULL,true);
+wp_register_script( 'base64', plugins_url('js/base64.js',__FILE__ ),false,NULL,true);
+
+
   wp_enqueue_script('bootstrapjs');
     wp_enqueue_script('datatables');
 wp_enqueue_script('dtpaging');
@@ -135,6 +139,8 @@ wp_enqueue_script('backbone');
 wp_enqueue_script('handlebars');
 wp_enqueue_script( 'fmprev');
 wp_enqueue_script( 'html2canvas');
+wp_enqueue_script( 'canvas2image');
+wp_enqueue_script( 'base64');
 }
 
 ?>

@@ -4,7 +4,7 @@ if ( !current_user_can( 'manage_options' ) )  {
 	wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 }
 ?>	
-<div class="container" style="margin:0">  	
+<div class="container" style="margin:0;background-color:#FDFDFD">  	
 	<div class="row">
 		<div class="col-md-7">
 			<h2>Preventivatore cavi FMGroup</h2>
@@ -34,7 +34,7 @@ if ( !current_user_can( 'manage_options' ) )  {
 					
 					<div>
 					<label for="sigla">Sigla nuovo cavo:</label>
-					<input type="text" name="sigla" id="newsigla" size="50" maxlength="50" />
+					<input type="text" name="sigla" id="newsigla" size="30" maxlength="30" />
 					</div>
 					<div>
 					<button  type="button" class="btn btn-primary" id="new_send">Aggiungi</button>
