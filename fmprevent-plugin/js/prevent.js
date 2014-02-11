@@ -30,12 +30,12 @@ Backbone.Model.prototype.toJSON = function() {
       
 };
 
-   FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" style="position:absolute;top:214px;left:390px"><input type="text" id="cable-length" placeholder="lunghezza" value="{{t_length}}">'+
+   FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" style="position:absolute;top:214px;left:390px"><div id="cable-length">Lunghezza(mm):<input type="text" placeholder="lunghezza" value="{{t_length}}"></div>'+
       '<input type="text" id="cable-sig-r" placeholder="siglatura dx" size="12" value="{{label_r}}"> <input type="text" id="cable-sig-l" placeholder="siglatura sx" size="12" value="{{label_l}}">'+
-  '<img src="../wp-content/plugins/fmprevent-plugin/images/cavo_blu.png" >'+
+  '<img src="'+ajax_object.siteurl+'/wp-content/plugins/fmprevent-plugin/images/cavo_blu.png" >'+
   '<input type="text" id="cable-type" placeholder="tipo cavo" value="{{type}}"></div>');
 
-  FMPrevent.Templates.Connector=Handlebars.compile('<div class="conn conn-{{side}} conn-{{idx}}-of-{{n_conns}}" style="background-image:url(../wp-content/plugins/fmprevent-plugin/images/connettori/connettore_{{type}}_{{side}}.png)">'+
+  FMPrevent.Templates.Connector=Handlebars.compile('<div class="conn conn-{{side}} conn-{{idx}}-of-{{n_conns}}" style="background-image:url('+ajax_object.siteurl+'/wp-content/plugins/fmprevent-plugin/images/connettori/connettore_{{type}}_{{side}}.png)">'+
       '<input class="conn-label" type="text" placeholder="siglatura" value="{{label}}" size="12">'+
       '<select class="conn-selector" >'+
         '<option value="puntale" {{#if_eq type "puntale"}}selected{{/if_eq}}>Puntale</option>'+
@@ -45,8 +45,8 @@ Backbone.Model.prototype.toJSON = function() {
       '</select>'+
     '</div>');
 
-    FMPrevent.Templates.FreeCables=Handlebars.compile('<div class="free-cables free-cables-{{side}} free-cables-{{n_conns}}" style="background-image:url(../wp-content/plugins/fmprevent-plugin/images/cavi/{{n_conns}}_cavi_{{side}}.png)">'+
-        '<input type="text" class="cable-sgua" placeholder="sguainatura" size="12" value="{{sgua}}">'+
+    FMPrevent.Templates.FreeCables=Handlebars.compile('<div class="free-cables free-cables-{{side}} free-cables-{{n_conns}}" style="background-image:url('+ajax_object.siteurl+'/wp-content/plugins/fmprevent-plugin/images/cavi/{{n_conns}}_cavi_{{side}}.png)">'+
+        '<div class="cable-sgua"><input type="text"  placeholder="sguainatura" size="12" value="{{sgua}}"><p>Sguainatura(mm)</p></div>'+
         '<div class="conn-container">'+
         '</div>'+
         '</div>');
@@ -160,7 +160,7 @@ Backbone.Model.prototype.toJSON = function() {
 
         events: {
 
-          "input .cable-sgua"   : "change_end_sgua"
+          "input .cable-sgua input"   : "change_end_sgua"
 
       },
 
@@ -189,7 +189,7 @@ Backbone.Model.prototype.toJSON = function() {
 
     change_end_sgua: function(){
 
-        this.model.set('sgua',this.$el.find('.cable-sgua').val());
+        this.model.set('sgua',this.$el.find('.cable-sgua input').val());
 
     }
 });
@@ -204,7 +204,7 @@ Backbone.Model.prototype.toJSON = function() {
       "autocompleteselect #cable-type"   : "change_cable_model",
       "input #cable-sig-l"   : "change_label_l",
       "input #cable-sig-r"   : "change_label_r",
-      "input #cable-length"   : "change_cable_length",
+      "input #cable-length input"   : "change_cable_length",
 
   },
 
@@ -254,7 +254,7 @@ change_label_r: function(){
 
 change_cable_length: function(){
 
-    this.model.set('t_length',this.$el.find("#cable-length").val());
+    this.model.set('t_length',this.$el.find("#cable-length input").val());
 
 },
 

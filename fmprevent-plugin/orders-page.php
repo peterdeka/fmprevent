@@ -64,9 +64,9 @@ reload_tableorders=function(tblid){
 				cab.loadJSON(d);
 				thecable = new FMPrevent.Views.Cable({model:cab});
 				jQuery('#fmprevent').before(FMPrevent.Templates.OrderInfo(d.info));
-				jQuery('#fmprevent').after('<button id="printbtn" class="btn btn-primary">Stampa</button>');
+				jQuery('#fmprevent').after('<button id="printbtn" class="btn btn-primary">Scarica</button>');
 				jQuery('#printbtn').click(function(){
-				html2canvas(jQuery('#fmprevent')[0], {
+				html2canvas(jQuery('#ordercontainer')[0], {
   				onrendered: function(canvas) {
    				 jQuery('#canvas').html('').append(canvas);
     			var oCanvas = jQuery('canvas')[0];  

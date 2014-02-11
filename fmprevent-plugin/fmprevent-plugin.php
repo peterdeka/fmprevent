@@ -96,7 +96,7 @@ wp_enqueue_style('fmprev_jqui');
 wp_register_script( 'handlebars', plugins_url('js/handlebars.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'fmprev', plugins_url('js/prevent.js',__FILE__ ),false,NULL,true);
 wp_localize_script( 'fmprev', 'ajax_object',
-            array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+            array( 'ajax_url' => admin_url( 'admin-ajax.php' ),'siteurl'=>get_bloginfo('url') ) );
 wp_register_script( 'jqvalidate', plugins_url('js/jquery.validate.min.js',__FILE__ ),array( 'jquery'),NULL,true);
 wp_enqueue_script('jquery-ui-autocomplete');
 wp_enqueue_script('underscore');
@@ -125,6 +125,8 @@ wp_register_script('bootstrapjs', plugins_url('js/bootstrap.min.js',__FILE__ ),n
 wp_register_script('datatables', plugins_url('js/dataTables.min.js',__FILE__ ),array( 'jquery'),NULL,true);
 wp_register_script('dtpaging', plugins_url('js/tablepaging.js',__FILE__ ),null,NULL,true);
 wp_register_script( 'fmprev', plugins_url('js/prevent.js',__FILE__ ),false,NULL,true);
+wp_localize_script( 'fmprev', 'ajax_object',
+            array( 'ajax_url' => admin_url( 'admin-ajax.php' ),'siteurl'=>get_bloginfo('url') ) );
 wp_register_script( 'html2canvas', plugins_url('js/html2canvas.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'canvas2image', plugins_url('js/canvas2image.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'base64', plugins_url('js/base64.js',__FILE__ ),false,NULL,true);

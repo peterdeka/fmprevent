@@ -14,21 +14,64 @@
   echo '<div id="fmprevent"></div>';
 
 ?>
+
 <div id="orderform">
-  <form>
-    <label for="order_name">Nome*:</label>
-    <input type="text" name="order_name" id="order_name" minlength="5" required>
-    <label for="order_mail">Email*:</label>
-    <input type="email" name="order_mail" id="order_mail" required>
-    <label for="order_phone">Telefono*:</label>
-    <input type="text" name="order_phone" id="order_phone" required>
-    <label for="order_message">Messaggio(opzionale):</label>
-    <input type="text" name="order_message" id="order_message">
-    <label for="order_quant">Quantità cavi*:</label>
-    <input type="text" name="order_quant" id="order_quant" required>
-    <input type="submit" id="sendorder">Invia ordine</button>
+<form >
+<table width="450px">
+</tr>
+<tr>
+ <td valign="top">
+  <label for="order_name">Nome*:</label>
+ </td>
+ <td valign="top">
+  <input type="text" name="order_name" id="order_name" minlength="5" required>
+ </td>
+</tr>
+ 
+
+<tr>
+ <td valign="top">
+  <label for="order_mail">Email*:</label>
+ </td>
+ <td valign="top">
+  <input type="email" name="order_mail" id="order_mail" required>
+ </td>
+ 
+</tr>
+<tr>
+ <td valign="top">
+  <label for="order_phone">Telefono*:</label>
+ </td>
+ <td valign="top">
+   <input type="text" name="order_phone" id="order_phone" required>
+ </td>
+</tr>
+<tr>
+ <td valign="top">
+  <label for="order_quant">Quantità cavi*:</label>
+ </td>
+ <td valign="top">
+  <input type="text" name="order_quant" id="order_quant" required>
+ </td>
+</tr>
+<tr>
+ <td valign="top">
+  <label for="order_message">Messaggio(opzionale):</label>
+ </td>
+ <td valign="top">
+  <textarea name="order_message" id="order_message" rows="4"></textarea>
+ </td>
+ 
+</tr>
+<tr>
+ <td colspan="2" style="text-align:center">
+  <input type="submit" value="Invia" id="sendorder">  
+ </td>
+</tr>
+</table>
 </form>
 </div>
+
 <script>
 jQuery(document).ready(function($) {
 thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable({type:cable_types[0]})});

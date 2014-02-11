@@ -1,8 +1,12 @@
-input[type="text"]{
+#fmprevent input[type="text"]{
 	background:white;
 	padding:5px 5px;
 	color:black;
 	width:auto;
+}
+
+#fmprevent input[type="text"], input[type="email"], input[type="number"], input[type="tel"], select{
+	width : auto !important;
 }
 
 #fmprevent{
@@ -171,15 +175,15 @@ position:absolute;top:300px;left:0px
 }
 
 #cable-sig-r{
-	right:0px;top:-30px;position:absolute;
+	right:0px;top:-38px;position:absolute;
 }
 
 #cable-sig-l{
-	left:0px;top:-30px;position:absolute;
+	left:0px;top:-38px;position:absolute;
 }
 
 #cable-type{
-	right:100px;top:10px;position:absolute;
+	right:100px;top:6px;position:absolute;
 }
 
 #orderform{
@@ -193,6 +197,6 @@ margin: 30px;
 }
 
 
-canvas{
+#canvas canvas{
 	visibility:hidden;
 }
