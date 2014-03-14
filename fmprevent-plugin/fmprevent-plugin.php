@@ -28,7 +28,34 @@ function fmprev_db_install() {
    $sql = "CREATE TABLE $table_name (
   id mediumint(9) NOT NULL AUTO_INCREMENT,
   sigla VARCHAR(55) DEFAULT '' NOT NULL,
+  prezzo_metro FLOAT UNSIGNED NOT NULL,
   UNIQUE KEY id (id)
+    );";
+
+   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+   dbDelta( $sql );
+
+  $table_name = $wpdb->prefix . "fmprev_connettori";
+      
+   $sql = "CREATE TABLE $table_name (
+  id mediumint(9) NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(29) DEFAULT '' NOT NULL,
+  UNIQUE KEY id (id)
+    );";
+
+   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+   dbDelta( $sql );
+
+
+   $table_name = $wpdb->prefix . "fmprev_connettori_sz";
+      
+   $sql = "CREATE TABLE $table_name (
+  id mediumint(9) NOT NULL AUTO_INCREMENT,
+  tipo mediumint(9) DEFAULT '' NOT NULL,
+  size FLOAT UNSIGNED NOT NULL,
+  prezzo FLOAT UNSIGNED NOT NULL,
+  UNIQUE KEY id (id),
+  FOREIGN KEY (tipo) REFERENCES fmprev_connettori(id)
     );";
 
    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -57,9 +84,14 @@ function fmprev_db_install_data() {
    global $wpdb;
    
    $table_name = $wpdb->prefix . "fmprev_cable_types";
-   $rows_affected = $wpdb->insert( $table_name, array( 'sigla' => 'HEF-3' ) );
-   $rows_affected = $wpdb->insert( $table_name, array( 'sigla' => 'HEF-4' ) );
-   $rows_affected = $wpdb->insert( $table_name, array( 'sigla' => 'HEF-5' ) );
+   $rows_affected = $wpdb->insert( $table_name, array( 'sigla' => 'HEF-3', 'prezzo_metro' => 1 ) );
+   $rows_affected = $wpdb->insert( $table_name, array( 'sigla' => 'HEF-4', 'prezzo_metro' => 2 ) );
+   $rows_affected = $wpdb->insert( $table_name, array( 'sigla' => 'HEF-5', 'prezzo_metro' => 3 ) );
+   $table_name = $wpdb->prefix . "fmprev_connettori";
+   $rows_affected = $wpdb->insert( $table_name, array( 'nome' => 'occhiello' ) );
+   $rows_affected = $wpdb->insert( $table_name, array( 'nome' => 'forchetta' ) );
+   $rows_affected = $wpdb->insert( $table_name, array( 'nome' => 'puntale' ) );
+   $rows_affected = $wpdb->insert( $table_name, array( 'nome' => 'faston' ) );
 }
 
 /*ADMIN */

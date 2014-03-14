@@ -5,6 +5,12 @@
 	width:auto;
 }
 
+#fmprevent #cable-body{
+	position:absolute;
+	top:214px;
+	left:390px
+}
+
 #fmprevent input[type="text"], input[type="email"], input[type="number"], input[type="tel"], select{
 	width : auto !important;
 }
@@ -30,7 +36,7 @@
 }
 
 .free-cables-r{
-	left:721px;
+	left:720px;
 }
 
 .free-cables-l{
@@ -75,7 +81,7 @@
 
 .conn{
 	position:absolute;
-	left:0px;
+	left:-1px;
 	width:77px;
 	height:42px;
 }

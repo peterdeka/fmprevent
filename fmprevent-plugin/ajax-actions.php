@@ -3,6 +3,9 @@
 if(is_admin()){
 	add_action( 'wp_ajax_add_order', 'add_order' );
 	add_action( 'wp_ajax_nopriv_add_order', 'add_order' );
+	add_action( 'wp_ajax_get_connectors', 'get_connectors' );
+	add_action( 'wp_ajax_nopriv_get_connectors', 'get_connectors' );
+	
 	add_action( 'wp_ajax_get_cabletypes', 'get_cable_types' );
 	add_action( 'wp_ajax_add_cabletypes', 'add_cable_type' );
 	add_action( 'wp_ajax_del_cabletypes', 'del_cable_type' );
@@ -139,6 +142,26 @@ function del_cable_type(){
 	die();
 }
 
+function get_connectors(){
+	global $wpdb;
+	$table_name = $wpdb->prefix . "fmprev_connettori";
+	$result = $wpdb->get_results("select * from ".$table_name);
+	$jstr='{tipo:{"id":'.$result[0]->id.',"name":"'.$result[0]->nome.'"},conntypes":[';
+
+	foreach ( $result as $r ) 
+	{
+
+		$jstr.='{"id":'.$r->id.',"nome":"'.$r->nome.'","sizes":[3,4,5]},';
+
+	}
+	if(count($result)>0)	
+		$jstr = substr_replace($jstr, ']', -1, strlen($jstr));
+	else
+		$jstr.=']';
+	$jstr.='}';
+	echo json_encode($jstr);
+	die();
+}
 
 function get_orders(){
 

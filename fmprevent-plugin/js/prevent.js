@@ -30,18 +30,19 @@ Backbone.Model.prototype.toJSON = function() {
       
 };
 
-   FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" style="position:absolute;top:214px;left:390px"><div id="cable-length">Lunghezza(mm):<input type="text" placeholder="lunghezza" value="{{t_length}}"></div>'+
+   FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" ><div id="cable-length">Lunghezza(mm):<input type="text" placeholder="lunghezza" value="{{t_length}}"></div>'+
       '<input type="text" id="cable-sig-r" placeholder="siglatura dx" size="12" value="{{label_r}}"> <input type="text" id="cable-sig-l" placeholder="siglatura sx" size="12" value="{{label_l}}">'+
   '<img src="'+ajax_object.siteurl+'/wp-content/plugins/fmprevent-plugin/images/cavo_blu.png" >'+
   '<input type="text" id="cable-type" placeholder="tipo cavo" value="{{type}}"></div>');
 
-  FMPrevent.Templates.Connector=Handlebars.compile('<div class="conn conn-{{side}} conn-{{idx}}-of-{{n_conns}}" style="background-image:url('+ajax_object.siteurl+'/wp-content/plugins/fmprevent-plugin/images/connettori/connettore_{{type}}_{{side}}.png)">'+
+  FMPrevent.Templates.Connector=Handlebars.compile('<div class="conn conn-{{side}} conn-{{idx}}-of-{{n_conns}}" style="background-image:url('+ajax_object.siteurl+'/wp-content/plugins/fmprevent-plugin/images/connettori/connettore_{{nome}}_{{side}}.png)">'+
       '<input class="conn-label" type="text" placeholder="siglatura" value="{{label}}" size="12">'+
       '<select class="conn-selector" >'+
-        '<option value="puntale" {{#if_eq type "puntale"}}selected{{/if_eq}}>Puntale</option>'+
-        '<option value="faston" {{#if_eq type "faston"}}selected{{/if_eq}}>Faston</option>'+
-        '<option value="occhiello" {{#if_eq type "occhiello"}}selected{{/if_eq}}>Occhiello</option>'+
-        '<option value="forchetta" {{#if_eq type "forchetta"}}selected{{/if_eq}}>Forchetta</option>'+
+        '{{#each conntypes}}<option value="{{@index}}" {{#if_eq ../tipo this.id}}selected{{/if_eq}}>{{this.nome}}</option>{{/each}}'+
+        
+      '</select>'+
+      '<select class="conn-size-selector">'+
+       '{{#each sel_sizes}}<option value="{{this}}" {{#if_eq ../size this}}selected{{/if_eq}}>{{this}}</option>{{/each}}'+
       '</select>'+
     '</div>');
 
@@ -67,12 +68,23 @@ Backbone.Model.prototype.toJSON = function() {
         if(this.get('conns') )
           return;
         var conns=new FMPrevent.Collections.Connectors();
+        var me=this;
+	
+       
+          
         for(i=0;i<this.get('n_conns');i++){
-           
-            conns.push(new FMPrevent.Models.Connector({idx:i+1,n_conns:this.get('n_conns'),side:this.get('side'),type:'puntale',label:''})); 
             
+
+var m = jQuery.extend(true,{},conn_type);
+		m['idx']=i+1;
+            m['n_conns']=me.get('n_conns');
+            m['side']=me.get('side');
+            m['label']='';
+            //conns.push(new FMPrevent.Models.Connector({idx:i+1,n_conns:this.get('n_conns'),side:this.get('side'),type:'puntale',label:''})); 
+            conns.push(new FMPrevent.Models.Connector(m)); 
         }
         this.set('conns',conns);
+     
     }
 
 });
@@ -130,6 +142,7 @@ Backbone.Model.prototype.toJSON = function() {
 
           _.bindAll(this, 'render');
 
+
         },
 
         render: function(){
@@ -148,8 +161,15 @@ Backbone.Model.prototype.toJSON = function() {
 
         change_conn_type: function(){
 
-            this.model.set('type',this.$el.find('.conn-selector').val());
-            this.render();
+	var newidx=this.$el.find('.conn-selector').val();
+	var ct=this.model.get('conntypes')[newidx];
+	console.log(ct);        
+    this.model.set('nome',ct.nome);
+    this.model.set('tipo',ct.id);
+    this.model.set('sel_sizes',ct.sizes);
+	    this.model.set('size',ct.sizes[0]);
+            
+	this.render();
 
         }
 
