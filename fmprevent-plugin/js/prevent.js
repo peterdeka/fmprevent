@@ -69,14 +69,11 @@ Backbone.Model.prototype.toJSON = function() {
           return;
         var conns=new FMPrevent.Collections.Connectors();
         var me=this;
-	
-       
-          
+
         for(i=0;i<this.get('n_conns');i++){
             
-
-var m = jQuery.extend(true,{},conn_type);
-		m['idx']=i+1;
+        var m = jQuery.extend(true,{},conn_type);
+		      m['idx']=i+1;
             m['n_conns']=me.get('n_conns');
             m['side']=me.get('side');
             m['label']='';
@@ -163,12 +160,12 @@ var m = jQuery.extend(true,{},conn_type);
 
 	var newidx=this.$el.find('.conn-selector').val();
 	var ct=this.model.get('conntypes')[newidx];
-	console.log(ct);        
+	   
     this.model.set('nome',ct.nome);
     this.model.set('tipo',ct.id);
     this.model.set('sel_sizes',ct.sizes);
 	    this.model.set('size',ct.sizes[0]);
-            
+            console.log(this.model);    
 	this.render();
 
         }

@@ -1,5 +1,4 @@
 <?php
-
 if(is_admin()){
 	add_action( 'wp_ajax_add_order', 'add_order' );
 	add_action( 'wp_ajax_nopriv_add_order', 'add_order' );
@@ -8,6 +7,7 @@ if(is_admin()){
 	
 	add_action( 'wp_ajax_get_cabletypes', 'get_cable_types' );
 	add_action( 'wp_ajax_add_cabletypes', 'add_cable_type' );
+	add_action( 'wp_ajax_add_connector_sz', 'add_connector_sz' );
 	add_action( 'wp_ajax_del_cabletypes', 'del_cable_type' );
 	add_action( 'wp_ajax_get_orders', 'get_orders' );
 	add_action( 'wp_ajax_get_order_info', 'get_order_info' );
@@ -91,7 +91,7 @@ function get_cable_types(){
 	foreach ( $result as $r ) 
 	{
 
-		$jstr.='{"id":'.$r->id.',"sigla":"'.$r->sigla.'"},';
+		$jstr.='{"id":'.$r->id.',"sigla":"'.$r->sigla.'","prezzo":'.$r->prezzo_metro.'},';
 
 	}
 	if(count($result)>0)	
@@ -108,6 +108,12 @@ function add_cable_type(){
 	$error = false;
        	//TODO QUOTES
 	$newtype=$p['newtype'];
+	$newprice=(float)$p['newprice'];
+	if(!is_numeric($newprice)){
+		echo 'NOT NUMBER';
+		die();
+	}
+
 	global $wpdb;
 	$table_name = $wpdb->prefix . "fmprev_cable_types";
 	$result = $wpdb->get_results("select * from ".$table_name. ' WHERE sigla = "'.$newtype.'"');
@@ -115,7 +121,7 @@ function add_cable_type(){
 		echo 'AX';
 		die();
 	}
-	if($wpdb->insert( $table_name, array( 'sigla' => $newtype ) )>0){
+	if($wpdb->insert( $table_name, array( 'sigla' => $newtype,'prezzo_metro'=>$newprice ) )>0){
 		echo 'OK';
 	}
 	else{
@@ -123,6 +129,30 @@ function add_cable_type(){
 	}
 	die();
 }
+
+function add_connector_sz(){
+	$p=$_POST;
+	$error = false;
+       	//TODO QUOTES
+	$newtype=(int)$p['newtype'];
+	$newsz=(float)$p['newsz'];
+	$newprice=(float)$p['newprice'];
+	if(!is_numeric($newprice) || !is_numeric($newsz)){
+		echo 'NO';
+		die();
+	}
+
+	global $wpdb;
+	$table_name = $wpdb->prefix . "fmprev_connettori_sz";
+	if($wpdb->insert( $table_name, array( 'tipo' => $newtype,'size'=>$newsz,'prezzo'=>$newprice ) )>0){
+		echo 'OK';
+	}
+	else{
+		echo 'NO';
+	}
+	die();
+}
+
 
 function del_cable_type(){
 	$p=$_POST;
@@ -142,18 +172,31 @@ function del_cable_type(){
 	die();
 }
 
+
+
 function get_connectors(){
 	global $wpdb;
 	$table_name = $wpdb->prefix . "fmprev_connettori";
-	$result = $wpdb->get_results("select * from ".$table_name);
-	$jstr='{tipo:{"id":'.$result[0]->id.',"name":"'.$result[0]->nome.'"},conntypes":[';
+	$result = $wpdb->get_results("SELECT * from ".$table_name);
+	$jstr='{"tipo":'.$result[0]->id.',"nome":"'.$result[0]->nome.'","conntypes":[';
 
 	foreach ( $result as $r ) 
 	{
+		$jstr.='{"id":'.$r->id.',"nome":"'.$r->nome.'","sizes":[';
+		$table_name = $wpdb->prefix . "fmprev_connettori_sz";
+		$re = $wpdb->get_results("SELECT * from ".$table_name." WHERE tipo=".$r->id);
+		foreach( $re as $rr)
+			$jstr.=$rr->size.',';
 
-		$jstr.='{"id":'.$r->id.',"nome":"'.$r->nome.'","sizes":[3,4,5]},';
+		if(count($re)>0)	
+		$jstr = substr_replace($jstr, ']', -1, strlen($jstr));
+		else
+		$jstr.=']';
+
+		$jstr.='},';
 
 	}
+
 	if(count($result)>0)	
 		$jstr = substr_replace($jstr, ']', -1, strlen($jstr));
 	else
@@ -162,6 +205,7 @@ function get_connectors(){
 	echo json_encode($jstr);
 	die();
 }
+
 
 function get_orders(){
 

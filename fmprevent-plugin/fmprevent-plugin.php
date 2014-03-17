@@ -29,7 +29,7 @@ function fmprev_db_install() {
   id mediumint(9) NOT NULL AUTO_INCREMENT,
   sigla VARCHAR(55) DEFAULT '' NOT NULL,
   prezzo_metro FLOAT UNSIGNED NOT NULL,
-  UNIQUE KEY id (id)
+  PRIMARY KEY id (id)
     );";
 
    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -40,7 +40,7 @@ function fmprev_db_install() {
    $sql = "CREATE TABLE $table_name (
   id mediumint(9) NOT NULL AUTO_INCREMENT,
   nome VARCHAR(29) DEFAULT '' NOT NULL,
-  UNIQUE KEY id (id)
+  PRIMARY KEY id (id)
     );";
 
    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -48,14 +48,15 @@ function fmprev_db_install() {
 
 
    $table_name = $wpdb->prefix . "fmprev_connettori_sz";
-      
+   $refname=$wpdb->prefix . "fmprev_cable_types";   
    $sql = "CREATE TABLE $table_name (
   id mediumint(9) NOT NULL AUTO_INCREMENT,
-  tipo mediumint(9) DEFAULT '' NOT NULL,
-  size FLOAT UNSIGNED NOT NULL,
-  prezzo FLOAT UNSIGNED NOT NULL,
-  UNIQUE KEY id (id),
-  FOREIGN KEY (tipo) REFERENCES fmprev_connettori(id)
+  tipo mediumint(9) NOT NULL,
+  size FLOAT NOT NULL,
+  prezzo FLOAT NOT NULL,
+  PRIMARY KEY id (id),
+  KEY tipo (tipo),
+  FOREIGN KEY (tipo) REFERENCES ".$refname."(id) ON DELETE CASCADE ON UPDATE CASCADE
     );";
 
    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -71,7 +72,7 @@ function fmprev_db_install() {
   msg TEXT DEFAULT '',
   json_cable TEXT DEFAULT '' NOT NULL,
   quantity INTEGER NOT NULL,
-  UNIQUE KEY id (id)
+  PRIMARY KEY id (id)
     );";
 
    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

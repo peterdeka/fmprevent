@@ -10,24 +10,7 @@
     }  
   echo '];';
 
-  $table_name = $wpdb->prefix."fmprev_connettori";
   
-  $result = $wpdb->get_results("select * from ".$table_name);
-  $jstr='{tipo:'.$result[0]->id.',"nome":"'.$result[0]->nome.'","size":2,conntypes:[';
-
-  foreach ( $result as $r ) 
-  {
-
-    $jstr.='{"id":'.$r->id.',"nome":"'.$r->nome.'","sizes":[3,4,5]},';
-
-  }
-  if(count($result)>0)  
-    $jstr = substr_replace($jstr, ']', -1, strlen($jstr));
-  else
-    $jstr.=']';
-  $jstr.='}';
-
-  echo 'conn_type='.$jstr.';';
 
 
   echo'</script>';
@@ -94,8 +77,12 @@
 
 <script>
 jQuery(document).ready(function($) {
-thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable({type:cable_types[0]})});
+  jQuery.post(ajax_object.ajax_url
+,{action:'get_connectors'}).done(function(data){
+  conn_type=JSON.parse(JSON.parse(data));
 
+  thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable({type:cable_types[0]})});
+});
 var orderformval=$( "#orderform form" ).validate({
   
   rules: {

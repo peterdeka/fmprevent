@@ -15,8 +15,8 @@ if ( !current_user_can( 'manage_options' ) )  {
 			<!-- Nav tabs -->
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#editdb" data-toggle="tab">Gestione cavi</a></li>
+				<li><a href="#connectors" data-toggle="tab">Connettori</a></li>
 				<li><a href="#orders" data-toggle="tab">Ordini</a></li>
-
 			</ul>
 			<!-- Tab panes -->
 			<div class="tab-content">
@@ -28,25 +28,30 @@ if ( !current_user_can( 'manage_options' ) )  {
 					</div></div>
 
 			
-					<div class="row"><div class="col-md-9"><h3>Cavi inseriti</h3><table id="cabletable" class="table data-table"><thead><tr><th>ID</th><th>Sigla</th><th>azioni</th></tr></thead><tbody>
+					<div class="row"><div class="col-md-9"><h3>Cavi inseriti</h3><table id="cabletable" class="table data-table"><thead><tr><th>ID</th><th>Sigla</th><th>Prezzo al metro</th><th>azioni</th></tr></thead><tbody>
 					</tbody></table></div>
 					<div class="col-md-3"><h3>Aggiungi cavo</h3>
 					
-					<div>
+					<form>
 					<label for="sigla">Sigla nuovo cavo:</label>
 					<input type="text" name="sigla" id="newsigla" size="30" maxlength="30" />
-					</div>
-					<div>
+					<label for="sigla">Prezzo al metro:</label>
+					<input type="text" name="prezzo" id="newprezzo" size="30" maxlength="6" />
+					
 					<button  type="button" class="btn btn-primary" id="new_send">Aggiungi</button>
-					</div>
+					</form>
 					
 
 					
 					</div></div>
 					
 				</div>
+				<div class="tab-pane" id="connectors">
+					<?php include 'connectors-page.php'; ?>
+					
+				</div>
 				<div class="tab-pane" id="orders">
-
+					
 					<?php include 'orders-page.php'; ?>
 				</div>
 				
@@ -59,14 +64,14 @@ reload_table=function(tblid){
 		jQuery.post(ajaxurl,{action:'get_cabletypes'}).done(function(data){
 		if(oTable != null)oTable.fnDestroy();
 		var tb=jQuery(tblid+" tbody");
-		tb.html('<tr><td>Loading...</td><td>Loading...</td><td>Loading...</td></tr>');
+		tb.html('<tr><td>Loading...</td><td>Loading...</td><td>Loading...</td><td>Loading...</td></tr>');
 		var d=data.replace(/\\/g, '');
 		d=d.substring(1,d.length-1);
 		var d = JSON.parse(d);
 		tb.html('');
 		jQuery.each(d.cabletypes,function(i,el){
 
-			tb.append('<tr><td>'+el.id+'</td><td>'+el.sigla+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');
+			tb.append('<tr><td>'+el.id+'</td><td>'+el.sigla+'</td><td>'+el.prezzo+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');
 
 		});
     	
@@ -97,9 +102,9 @@ jQuery(document).ready(function($) {
 	oTable=null;
 	reload_table('#cabletable');
 
-	$('#new_send').click(function(){
-
-		var r=$.post(ajaxurl,{action:'add_cabletypes',newtype:$('#newsigla').val()});
+	$('#new_send').click(function(e){
+		e.preventDefault();
+		var r=$.post(ajaxurl,{action:'add_cabletypes',newtype:$('#newsigla').val(),newprice:$('#newprezzo').val()});
 		r.done(function(data){
 			if(data=='OK'){
 				$('#msgarea').html('<span class="label label-success">Elemento inserito con successo.</span>');
@@ -110,6 +115,7 @@ jQuery(document).ready(function($) {
 			else
 				$('#msgarea').html('<span class="label label-danger">Errore durante l\'inserimento del nuovo elemento.</span>');
 		});
+		return false;
 	});
 
 
