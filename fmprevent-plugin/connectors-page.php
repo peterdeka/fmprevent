@@ -38,9 +38,10 @@ reload_tablec=function(tblid){
 		var d = JSON.parse(d);
 		tb.html('');
 		jQuery.each(d.conntypes,function(i,el){
+			
 			jQuery.each(el.sizes,function(ii,eel){
 				console.log(el);
-				tb.append('<tr><td>'+el.id+'</td><td>'+el.nome+'</td><td>'+eel+'</td><td>'+eel.prezzo+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');
+				tb.append('<tr><td>'+eel.id+'</td><td>'+el.nome+'</td><td>'+eel.size+'</td><td>'+eel.prezzo+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');
 			});
 		});
     	

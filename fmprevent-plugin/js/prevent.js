@@ -42,9 +42,10 @@ Backbone.Model.prototype.toJSON = function() {
         
       '</select>'+
       '<select class="conn-size-selector">'+
-       '{{#each sel_sizes}}<option value="{{this}}" {{#if_eq ../size this}}selected{{/if_eq}}>{{this}}</option>{{/each}}'+
+       '{{#each sel_sizes}}<option value="{{@index}}" {{#if_eq ../size this.id}}selected{{/if_eq}}>{{this.size}}</option>{{/each}}'+
       '</select>'+
     '</div>');
+
 
     FMPrevent.Templates.FreeCables=Handlebars.compile('<div class="free-cables free-cables-{{side}} free-cables-{{n_conns}}" style="background-image:url('+ajax_object.siteurl+'/wp-content/plugins/fmprevent-plugin/images/cavi/{{n_conns}}_cavi_{{side}}.png)">'+
         '<div class="cable-sgua"><input type="text"  placeholder="sguainatura" size="12" value="{{sgua}}"><p>Sguainatura(mm)</p></div>'+
@@ -52,7 +53,7 @@ Backbone.Model.prototype.toJSON = function() {
         '</div>'+
         '</div>');
 
-    FMPrevent.Templates.OrderInfo=Handlebars.compile('<div font-size:15px><p>ID ordine: {{id}}  -  Quantità: {{quantity}} - Nome: {{name}}  - Tel.: {{phone}}  - email: {{email}}  -  Messaggio: {{msg}}</p></div>');
+    FMPrevent.Templates.OrderInfo=Handlebars.compile('<div style="font-size:15px" id="orderdetails"><p>ID ordine: {{id}}  -  Quantità: {{quantity}} - Nome: {{name}}  - Tel.: {{phone}}  - email: {{email}}  -  Messaggio: {{msg}}</p></div>');
 
     FMPrevent.Models.CableEnd = Backbone.Model.extend({
 
@@ -73,11 +74,11 @@ Backbone.Model.prototype.toJSON = function() {
         for(i=0;i<this.get('n_conns');i++){
             
         var m = jQuery.extend(true,{},conn_type);
-		      m['idx']=i+1;
+		        m['idx']=i+1;
             m['n_conns']=me.get('n_conns');
             m['side']=me.get('side');
             m['label']='';
-            //conns.push(new FMPrevent.Models.Connector({idx:i+1,n_conns:this.get('n_conns'),side:this.get('side'),type:'puntale',label:''})); 
+            
             conns.push(new FMPrevent.Models.Connector(m)); 
         }
         this.set('conns',conns);
@@ -94,13 +95,14 @@ Backbone.Model.prototype.toJSON = function() {
         this.set('n_wires',parseInt(a[a.length-1]));
         this.set('right_end',new FMPrevent.Models.CableEnd({side:'r',type:'freecables',n_conns:this.get('n_wires')}));
         this.set('left_end',new FMPrevent.Models.CableEnd({side:'l',type:'freecables',n_conns:this.get('n_wires')}));
-         this.set('label_l','');
-      this.set('label_r','');
-      this.set('t_length',0);
+        this.set('label_l','');
+        this.set('label_r','');
+        this.set('t_length',0);
 
     },
 
     loadJSON: function(jso){
+
       this.set('type',jso.type);
       this.set('n_wires',jso.n_wires);
       this.set('label_l',jso.label_l);
@@ -132,21 +134,28 @@ Backbone.Model.prototype.toJSON = function() {
         events:{
 
             "input .conn-label" : "change_label",
-            "change .conn-selector" : "change_conn_type"
+            "change .conn-selector" : "change_conn_type",
+            "change .conn-size-selector" : "change_conn_size"
         },
 
         initialize: function(){
 
           _.bindAll(this, 'render');
-
-
+        
         },
 
         render: function(){
-
+          debugger;
+            if (typeof(this.model.get('sel_sizes'))=='undefined'){  //defaults
+              var ct=this.model.get('conntypes')[0];
+              this.model.set('nome',ct.nome);
+              this.model.set('tipo',ct.id);
+              this.model.set('sel_sizes',ct.sizes);
+              this.model.set('size',ct.sizes[0].id);
+            }
             var html=FMPrevent.Templates.Connector(this.model.toJSON());
-            
             this.$el.html(html);
+          
             return this;
         },
 
@@ -158,15 +167,20 @@ Backbone.Model.prototype.toJSON = function() {
 
         change_conn_type: function(){
 
-	var newidx=this.$el.find('.conn-selector').val();
-	var ct=this.model.get('conntypes')[newidx];
-	   
-    this.model.set('nome',ct.nome);
-    this.model.set('tipo',ct.id);
-    this.model.set('sel_sizes',ct.sizes);
-	    this.model.set('size',ct.sizes[0]);
-            console.log(this.model);    
-	this.render();
+	         var newidx=this.$el.find('.conn-selector').val();
+	         var ct=this.model.get('conntypes')[newidx];
+           this.model.set('nome',ct.nome);
+           this.model.set('tipo',ct.id);
+           this.model.set('sel_sizes',ct.sizes);
+	         this.model.set('size',ct.sizes[0].id);
+                
+	         this.render();
+
+        },
+
+        change_conn_size: function(){
+            var sz=this.$el.find('.conn-size-selector').val();
+            this.model.set('size',this.model.get('sel_sizes')[sz].id);
 
         }
 
@@ -226,8 +240,9 @@ Backbone.Model.prototype.toJSON = function() {
   },
 
   initialize: function(){
-
+      this.$el.html('');
       this.render();
+
   },
 
   render: function() {
@@ -236,7 +251,7 @@ Backbone.Model.prototype.toJSON = function() {
   this.$el.removeClass (function (index, css) {
     return (css.match (/\bfmprevent-\S+/g) || []).join(' ');
   });
-  this.$el.addClass('fmprevent-'+this.model.get('n_wires'));
+    this.$el.addClass('fmprevent-'+this.model.get('n_wires'));
     var html=FMPrevent.Templates.Cable(this.model.toJSON());
     this.$el.html(html);
     var vr=new FMPrevent.Views.CableEnd({model:this.model.get('right_end')});
@@ -273,7 +288,7 @@ change_cable_length: function(){
 
     this.model.set('t_length',this.$el.find("#cable-length input").val());
 
-},
+}
 
 
 });

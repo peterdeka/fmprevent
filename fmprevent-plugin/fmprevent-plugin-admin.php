@@ -123,4 +123,11 @@ jQuery(document).ready(function($) {
 
 
 
+jQuery(document).ready(function($) {
+  jQuery.post(ajaxurl
+,{action:'get_connectors'}).done(function(data){
+  conn_type=JSON.parse(JSON.parse(data));
+
+
+});});
 </script>

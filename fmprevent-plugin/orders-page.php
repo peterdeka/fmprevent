@@ -62,7 +62,11 @@ reload_tableorders=function(tblid){
 				d = JSON.parse(d);
 				var cab=new FMPrevent.Models.Cable({type:d.type});
 				cab.loadJSON(d);
+				jQuery('#printbtn').remove();
+				jQuery('#orderdetails').remove();
 				thecable = new FMPrevent.Views.Cable({model:cab});
+				 jQuery('#fmprevent').find("input").attr('disabled','disabled');
+      				jQuery('#fmprevent').find("select").attr('disabled','disabled');
 				jQuery('#fmprevent').before(FMPrevent.Templates.OrderInfo(d.info));
 				jQuery('#fmprevent').after('<button id="printbtn" class="btn btn-primary">Scarica</button>');
 				jQuery('#printbtn').click(function(){

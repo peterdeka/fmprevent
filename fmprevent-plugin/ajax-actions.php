@@ -186,7 +186,7 @@ function get_connectors(){
 		$table_name = $wpdb->prefix . "fmprev_connettori_sz";
 		$re = $wpdb->get_results("SELECT * from ".$table_name." WHERE tipo=".$r->id);
 		foreach( $re as $rr)
-			$jstr.=$rr->size.',';
+			$jstr.='{"id":'.$rr->id.',"size":'.$rr->size.'},';
 
 		if(count($re)>0)	
 		$jstr = substr_replace($jstr, ']', -1, strlen($jstr));
