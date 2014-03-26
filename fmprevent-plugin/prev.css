@@ -1,22 +1,25 @@
 #fmprevent input[type="text"]{
 	background:white;
-	padding:5px 5px;
+	padding:2px 1px;
 	color:black;
 	width:auto;
 }
 
 #fmprevent #cable-body{
 	position:absolute;
-	top:214px;
+	top:190px;
 	left:390px
 }
 
 #fmprevent input[type="text"], input[type="email"], input[type="number"], input[type="tel"], select{
 	width : auto !important;
+	height:26px !important;
 }
 
 #fmprevent{
-	position:relative;width:1180px;height:450px;
+	position:relative;
+	width:1180px;
+	height:450px;
 }
 
 #fmprevent.fmprevent-3{
@@ -31,59 +34,73 @@
 	height:500px;
 }
 .free-cables{
-	position:absolute;width:195px;
+	position:absolute;
+	width:174px;
 	background-repeat: no-repeat;
 }
 
 .free-cables-r{
-	left:720px;
+	left:690px;
 }
 
 .free-cables-l{
-	left:195px;
+	left:215px;
 }
 
 .free-cables-3{
-	top:140px;height:191px;
+	top:140px;
+	height:132px;
 }
 
 .free-cables-4{
-	top:76px;height:325px;
+	top:81px;
+	height:250px;
 }
 
 .free-cables-5{
-	top:76px;height:325px;
+	top:81px;
+	height:250px;
 }
 
 .conn-r .conn-selector{
 	position:absolute;
 	right:-110px;
-	top:10px;
+	
 }
 
 .conn-l .conn-selector{
 	position:absolute;
 	left:-110px;
-	top:10px;
+	
 }
 
 .conn-r .conn-label{
 	position:absolute;
-	left:-100px;
-	top:30px;
+	left:-110px;
+	top:20px;
 }
 
 .conn-l .conn-label{
 	position:absolute;
-	left:80px;
-	top:30px;
+	left: 50px;
+	top: 20px;
+}
+
+.conn-r .conn-size-selector{
+	position:absolute;
+	left:160px;
+}
+
+.conn-l .conn-size-selector{
+	position:absolute;
+	left:-170px;
 }
 
 .conn{
 	position:absolute;
 	left:-1px;
-	width:77px;
-	height:42px;
+	width:39px;
+	height:21px;
 }
 
 .free-cables-r .cable-sgua{
@@ -110,27 +127,31 @@
 }
 
 .free-cables-r .conn-container{
-	left:195px;
+	left:175px;
 	position:absolute;
 }
 
 .free-cables-l .conn-container{
-	right:270px;
+	right:212px;
 	position:absolute;
 }
 
 
 /*3 conns*/
 .conn-1-of-3 {
-	top:-18px;
+	top:-8px;
 }
 
 .conn-2-of-3{
-position:absolute;top:74px;left:0px
+position:absolute;
+top:56px;
+left:0px
 }
 
 .conn-3-of-3{
-position:absolute;top:166px;left:0px
+position:absolute;
+top:119px;
+left:0px
 }
 
 
@@ -138,40 +159,50 @@ position:absolute;top:166px;left:0px
 
 /*4 conns*/
 .conn-1-of-4 {
-	top:-18px;
+	top:-8px;
 }
 
 .conn-2-of-4{
-position:absolute;top:59px;left:0px
+position:absolute;
+top:51px;
+left:0px
 }
 
 .conn-3-of-4{
-position:absolute;top:223px;left:0px
+position:absolute;
+top:177px;
+left:0px
 }
 
 .conn-4-of-4{
-position:absolute;top:300px;left:0px
+position:absolute;
+top:236px;
+left:0px
 }
 
 /*5 conns*/
 .conn-1-of-5 {
-	top:-18px;
+	top:-8px;
 }
 
 .conn-2-of-5{
-position:absolute;top:59px;left:0px
+position:absolute;
+top:51px;
+left:0px
 }
 
 .conn-3-of-5{
-position:absolute;top:141px;left:0px
+position:absolute;
+top:114px;
+left:0px
 }
 
 .conn-4-of-5{
-position:absolute;top:223px;left:0px
+position:absolute;top:177px;left:0px
 }
 
 .conn-5-of-5{
-position:absolute;top:300px;left:0px
+position:absolute;top:236px;left:0px
 }
 
 #cable-length{
@@ -189,7 +220,9 @@ position:absolute;top:300px;left:0px
 }
 
 #cable-type{
-	right:100px;top:6px;position:absolute;
+	position:absolute;
+	right: 75px;
+	top: 3px;
 }
 
 #orderform{
@@ -206,3 +239,4 @@ margin: 30px;
 #canvas canvas{
 	visibility:hidden;
 }
+
