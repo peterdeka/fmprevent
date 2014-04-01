@@ -30,7 +30,8 @@ Backbone.Model.prototype.toJSON = function() {
       
 };
 
-   FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" ><div id="cable-length">Lunghezza(mm):<input type="text" placeholder="lunghezza" value="{{t_length}}"></div>'+
+   FMPrevent.Templates.Cable=Handlebars.compile('<div id="cable-body" ><div id="cable-length">Lunghezza(mm):<input type="text" placeholder="lunghezza" value="{{t_length}}">'+
+    '<img src="'+ajax_object.siteurl+'/wp-content/plugins/fmprevent-plugin/images/lunghezza_cavo.png"></div>'+
       '<input type="text" id="cable-sig-r" placeholder="siglatura dx" size="12" value="{{label_r}}"> <input type="text" id="cable-sig-l" placeholder="siglatura sx" size="12" value="{{label_l}}">'+
   '<img src="'+ajax_object.siteurl+'/wp-content/plugins/fmprevent-plugin/images/cavo_blu.png" >'+
   '<input type="text" id="cable-type" placeholder="tipo cavo" value="{{type}}"></div>');

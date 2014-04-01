@@ -49,17 +49,17 @@
 
 .free-cables-3{
 	top:140px;
-	height:132px;
+	height:198px;
 }
 
 .free-cables-4{
 	top:81px;
-	height:250px;
+	height:315px;
 }
 
 .free-cables-5{
 	top:81px;
-	height:250px;
+	height:315px;
 }
 
 .conn-r .conn-selector{
@@ -103,28 +103,42 @@
 	height:21px;
 }
 
-.free-cables-r .cable-sgua{
+.free-cables-3.free-cables-r .cable-sgua{
 	position:absolute;
-	top:120px;
-	left:-120px;
+	top:200px;
+	left:35px;
 }
 
-.free-cables-l .cable-sgua{
+.free-cables-3.free-cables-l .cable-sgua{
 	position:absolute;
-	top:120px;
-	right:-120px;
+	top:200px;
+	right:35px;
 }
 
-.free-cables-4 .cable-sgua{
-
-	top:185px;
+.free-cables-4.free-cables-r .cable-sgua{
+	position:absolute;
+	top:315px;
+	left:35px;
 }
 
-.free-cables-5 .cable-sgua{
-
-	top:185px;
-	
+.free-cables-4.free-cables-l .cable-sgua{
+	position:absolute;
+	top:315px;
+	right:35px;
 }
+
+.free-cables-5.free-cables-r .cable-sgua{
+	position:absolute;
+	top:315px;
+	left:35px;
+}
+
+.free-cables-5.free-cables-l .cable-sgua{
+	position:absolute;
+	top:315px;
+	right:35px;
+}
+
 
 .free-cables-r .conn-container{
 	left:175px;
@@ -206,9 +220,10 @@ position:absolute;top:236px;left:0px
 }
 
 #cable-length{
-	right:100px;
-	top:-100px;
+	right: -174px;
+	top: -170px;
 	position:absolute;
+	text-align: center;
 }
 
 #cable-sig-r{
