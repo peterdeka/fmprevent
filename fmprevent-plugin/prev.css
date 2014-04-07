@@ -14,12 +14,16 @@
 #fmprevent input[type="text"], input[type="email"], input[type="number"], input[type="tel"], select{
 	width : auto !important;
 	height:26px !important;
+	
+	line-height:14px !important;
+	padding:0 !important;
 }
 
 #fmprevent{
 	position:relative;
 	width:1180px;
 	height:450px;
+	left:2%;
 }
 
 #fmprevent.fmprevent-3{
@@ -33,6 +37,12 @@
 #fmprevent.fmprevent-5{
 	height:500px;
 }
+
+#priceview{
+	text-align: center;
+	font-size: 17px;
+}
+
 .free-cables{
 	position:absolute;
 	width:174px;
@@ -254,4 +264,3 @@ margin: 30px;
 #canvas canvas{
 	visibility:hidden;
 }
-

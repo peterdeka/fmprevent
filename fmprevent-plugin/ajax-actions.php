@@ -66,7 +66,7 @@ function add_order(){
 
 	//inserisco
 	global $wpdb;
-$wpdb->show_errors();
+	$wpdb->show_errors();
 	$table_name = $wpdb->prefix . "fmprev_orders";
 	if($wpdb->insert( $table_name, $sql ,array( '%s','%s','%s','%s','%d','%s') )>0){
 		echo 'OK';
@@ -76,7 +76,20 @@ $wpdb->show_errors();
 		echo 'NO8';
 	}
 
+	//send mail to owner
 
+
+	$headers[] = 'From: Preventivatore <preventivatore@fmgroup.it>';
+	$headers[] = "Content-type: text/html";
+	$message='<p>Ricevuto un nuovo ordine preventivatore. Dati cliente:</p>';
+	$message.='<p>Nome:'.$oinfo["order_name"].'</p>';
+	$message.='<p>Email:'.$oinfo["order_email"].'</p>';
+	$message.='<p>Tel:'.$oinfo["order_phone"].'</p>';
+	$message.='<p>Messaggio:'.$oinfo["order_message"].'</p>';
+	$message.='<p>Quantita:'.$oinfo["order_quant"].'</p>';
+	$message.='<p>Visualizza gli ordini <a href="http://www.fmgroup.it/wp-admin/admin.php?page=fmprevent_admin"> qui </a>.</p>';
+
+	wp_mail( 'pietro.decaro@wannaup.com', 'nuovo ordine preventivatore', $message, $headers );
 
 	die();
 }
@@ -186,7 +199,7 @@ function get_connectors(){
 		$table_name = $wpdb->prefix . "fmprev_connettori_sz";
 		$re = $wpdb->get_results("SELECT * from ".$table_name." WHERE tipo=".$r->id);
 		foreach( $re as $rr)
-			$jstr.='{"id":'.$rr->id.',"size":'.$rr->size.'},';
+			$jstr.='{"id":'.$rr->id.',"size":'.$rr->size.',"prezzo":'.$rr->prezzo.'},';
 
 		if(count($re)>0)	
 		$jstr = substr_replace($jstr, ']', -1, strlen($jstr));

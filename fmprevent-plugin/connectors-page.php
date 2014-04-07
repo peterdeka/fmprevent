@@ -10,16 +10,19 @@
 					</tbody></table></div>
 					<div class="col-md-3"><h3>Aggiungi connettore</h3>
 					
-					<form>
-					<label for="tipo">Tipo connettore:</label>
-					<select name="tipo" id="tipo">
-						
-					</select>
-					<label for="misura">Misura:</label>
-					<input type="text" name="misura" id="misura" size="30" maxlength="6" />
-					<label for="prezzo">Prezzo:</label>
-					<input type="text" name="prezzo" id="newprezzo" size="30" maxlength="6" />
-					
+					<form role="form">
+					<div class="form-group">
+						<label for="tipo">Tipo connettore:</label>
+						<select name="tipo" id="tipo"></select>
+					</div>
+					<div class="form-group">
+						<label for="misura">Misura:</label>
+						<input type="text" name="misura" id="misura" size="20" maxlength="6" />
+					</div>
+					<div class="form-group">
+						<label for="prezzo">Prezzo:</label>
+						<input type="text" name="prezzo" id="newprezzo" size="20" maxlength="6" />
+					</div>
 					<button  type="button" class="btn btn-primary" id="newc_send">Aggiungi</button>
 					</form>
 					

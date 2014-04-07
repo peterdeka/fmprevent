@@ -42,9 +42,11 @@ Backbone.Model.prototype.toJSON = function() {
         '{{#each conntypes}}<option value="{{@index}}" {{#if_eq ../tipo this.id}}selected{{/if_eq}}>{{this.nome}}</option>{{/each}}'+
         
       '</select>'+
-      '<select class="conn-size-selector">'+
+
+      '<div class="conn-size-selector"><select>'+
        '{{#each sel_sizes}}<option value="{{@index}}" {{#if_eq ../size this.id}}selected{{/if_eq}}>{{this.size}}</option>{{/each}}'+
       '</select>'+
+      '<p>mm</p></div>'+
     '</div>');
 
 
@@ -146,13 +148,14 @@ Backbone.Model.prototype.toJSON = function() {
         },
 
         render: function(){
-          debugger;
+          
             if (typeof(this.model.get('sel_sizes'))=='undefined'){  //defaults
               var ct=this.model.get('conntypes')[0];
               this.model.set('nome',ct.nome);
               this.model.set('tipo',ct.id);
               this.model.set('sel_sizes',ct.sizes);
               this.model.set('size',ct.sizes[0].id);
+              this.model.set('price',ct.sizes[0].prezzo);
             }
             var html=FMPrevent.Templates.Connector(this.model.toJSON());
             this.$el.html(html);
@@ -174,14 +177,16 @@ Backbone.Model.prototype.toJSON = function() {
            this.model.set('tipo',ct.id);
            this.model.set('sel_sizes',ct.sizes);
 	         this.model.set('size',ct.sizes[0].id);
+           this.model.set('price',ct.sizes[0].prezzo);
                 
 	         this.render();
 
         },
 
         change_conn_size: function(){
-            var sz=this.$el.find('.conn-size-selector').val();
+            var sz=this.$el.find('.conn-size-selector select').val();
             this.model.set('size',this.model.get('sel_sizes')[sz].id);
+            this.model.set('price',this.model.get('sel_sizes')[sz].prezzo);
 
         }
 
@@ -270,6 +275,7 @@ Backbone.Model.prototype.toJSON = function() {
 change_cable_model:  function(e, ui){
     
     this.model=new FMPrevent.Models.Cable({type:ui.item.value});
+    pricefield=new FMPrevent.Views.Price({model:this.model});
     this.render();
 },
 
@@ -292,6 +298,40 @@ change_cable_length: function(){
 }
 
 
+});
+
+FMPrevent.Views.Price = Backbone.View.extend({
+
+    el:'#priceview',
+
+  initialize: function(){
+
+      this.listenTo(this.model, "change", this.render);
+      this.listenTo(this.model.get('right_end'), "change", this.render);
+      this.listenTo(this.model.get('left_end'), "change", this.render);
+      this.listenTo(this.model.get('left_end').get('conns'), "change", this.render);
+      this.listenTo(this.model.get('right_end').get('conns'), "change", this.render);
+      this.render();
+
+  },
+
+  render: function() {
+    
+    var tidx=cable_types.indexOf(this.model.get('type'));
+    var tl=this.model.get('t_length');
+    var rend=this.model.get('right_end').get('conns').models;
+    var lend=this.model.get('left_end').get('conns').models;
+    var nconns=rend[0].get('n_conns');
+    var total=tl*cable_prices[tidx];
+    for(var i=0;i<nconns;i++){
+
+      total+=rend[i].get('price');
+      total+=lend[i].get('price');
+
+    }
+    this.$el.find('#est_price').html(total);
+
+  }
 });
 
 

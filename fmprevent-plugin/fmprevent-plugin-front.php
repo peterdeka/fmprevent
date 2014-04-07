@@ -3,18 +3,21 @@
   global $wpdb;
   $result = $wpdb->get_results("select * from ".$wpdb->prefix . "fmprev_cable_types");
   
-  echo '<script type="text/javascript"> cable_types=[';
+  echo '<script type="text/javascript">'; 
+  $prices='[';
+  $types='[';
   foreach ( $result as $r ) 
   {
-      echo '"'.$r->sigla.'",';
+      $types.='"'.$r->sigla.'",';
+      $prices.=$r->prezzo_metro.',';
     }  
-  echo '];';
-
-  
-
+  $types.= '];';
+  $prices.='];';
+  echo 'cable_prices='.$prices.';';
+  echo 'cable_types='.$types.';';
 
   echo'</script>';
-  echo '<div id="fmprevent"></div>';
+  echo '<div id="fmprevent"></div><div id="priceview"><p>Prezzo di listino stimato:<span id="est_price"></span> euro per cavo</p></div>';
 
 ?>
 
@@ -80,8 +83,9 @@ jQuery(document).ready(function($) {
   jQuery.post(ajax_object.ajax_url
 ,{action:'get_connectors'}).done(function(data){
   conn_type=JSON.parse(JSON.parse(data));
-
-  thecable = new FMPrevent.Views.Cable({model:new FMPrevent.Models.Cable({type:cable_types[0]})});
+  var m=new FMPrevent.Models.Cable({type:cable_types[0]});
+  thecable = new FMPrevent.Views.Cable({model:m});
+  pricefield= new FMPrevent.Views.Price({model:m});
 });
 var orderformval=$( "#orderform form" ).validate({
   

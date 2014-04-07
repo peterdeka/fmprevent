@@ -32,11 +32,15 @@ if ( !current_user_can( 'manage_options' ) )  {
 					</tbody></table></div>
 					<div class="col-md-3"><h3>Aggiungi cavo</h3>
 					
-					<form>
-					<label for="sigla">Sigla nuovo cavo:</label>
-					<input type="text" name="sigla" id="newsigla" size="30" maxlength="30" />
-					<label for="sigla">Prezzo al metro:</label>
-					<input type="text" name="prezzo" id="newprezzo" size="30" maxlength="6" />
+					<form role="form">
+						<div class="form-group">
+							<label for="sigla">Sigla nuovo cavo:</label>
+							<input type="text" name="sigla" id="newsigla" size="30" maxlength="30" />
+						</div>
+						<div class="form-group">
+							<label for="sigla">Prezzo al metro:</label>
+							<input type="text" name="prezzo" id="newprezzo" size="30" maxlength="6" />
+						</div>
 					
 					<button  type="button" class="btn btn-primary" id="new_send">Aggiungi</button>
 					</form>
