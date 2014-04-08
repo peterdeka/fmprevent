@@ -51,6 +51,7 @@ function fmprev_db_install() {
    $refname=$wpdb->prefix . "fmprev_cable_types";   
    $sql = "CREATE TABLE $table_name (
   id mediumint(9) NOT NULL AUTO_INCREMENT,
+  codice VARCHAR(255) NOT NULL,
   tipo mediumint(9) NOT NULL,
   size FLOAT NOT NULL,
   prezzo FLOAT NOT NULL,
@@ -163,7 +164,7 @@ wp_localize_script( 'fmprev', 'ajax_object',
 wp_register_script( 'html2canvas', plugins_url('js/html2canvas.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'canvas2image', plugins_url('js/canvas2image.js',__FILE__ ),false,NULL,true);
 wp_register_script( 'base64', plugins_url('js/base64.js',__FILE__ ),false,NULL,true);
-
+wp_register_script( 'jspdf', plugins_url('js/jspdf.min.js',__FILE__ ),false,NULL,true);
 
   wp_enqueue_script('bootstrapjs');
     wp_enqueue_script('datatables');
@@ -176,6 +177,7 @@ wp_enqueue_script( 'fmprev');
 wp_enqueue_script( 'html2canvas');
 wp_enqueue_script( 'canvas2image');
 wp_enqueue_script( 'base64');
+wp_enqueue_script( 'jspdf');
 }
 
 ?>

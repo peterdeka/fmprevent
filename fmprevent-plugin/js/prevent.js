@@ -125,6 +125,42 @@ Backbone.Model.prototype.toJSON = function() {
       });
       this.set('left_end',new FMPrevent.Models.CableEnd({side:'l',type:jsor.type,n_conns:jsor.n_conns,sgua:jsor.sgua,conns:new FMPrevent.Collections.Connectors(jsor.conns)}));
 
+    },
+
+    gen_distinta: function(){
+
+      var html='<table style="border:1px solid #666;width:700px;background-color:white"><tr><th>Componente</th><th>Unita</th><th>Prezzo-u</th><th>Prezzo totale</th>';
+      var tidx=cable_types.indexOf(this.get('type'));
+      var tl=this.get('t_length');
+      var rend=this.get('right_end').get('conns').models;
+      var lend=this.get('left_end').get('conns').models;
+      var nconns=rend[0].get('n_conns');
+      var total=tl/1000*cable_prices[tidx];
+      html+='<tr><td>Cavo. '+this.get('type')+'</td><td>'+tl+'</td><td>'+cable_prices[tidx]+'</td><td>'+total+'</td></tr>';
+      var group_conns={};
+      for(var i=0;i<nconns;i++){
+        //conto raggruppati
+        if(!(rend[i].get('codice') in group_conns)){
+          group_conns[rend[i].get('codice') ]={c:1,prc:rend[i].get('price')};
+        }
+        else
+          group_conns[rend[i].get('codice') ].c+=1
+
+        if(!(lend[i].get('codice') in group_conns)){
+          group_conns[lend[i].get('codice') ]={c:1,prc:lend[i].get('price')};;
+        }
+        else
+          group_conns[lend[i].get('codice') ].c+=1
+      }
+    
+      jQuery.each(group_conns,function(i,el){
+        total+=el.c*el.prc;
+        html+='<tr><td>Conn. '+i+'</td><td>'+el.c+'</td><td>'+el.prc+'</td><td>'+el.c*el.prc+'</td></tr>';
+      });
+      html+='<tr style="border-top:1px solid #666"><td>Totale</td><td></td><td></td><td>'+total+'</td></tr>';
+      return html+'</table>';
+
+
     }
 
    
@@ -156,6 +192,7 @@ Backbone.Model.prototype.toJSON = function() {
               this.model.set('sel_sizes',ct.sizes);
               this.model.set('size',ct.sizes[0].id);
               this.model.set('price',ct.sizes[0].prezzo);
+              this.model.set('codice',ct.sizes[0].codice);
             }
             var html=FMPrevent.Templates.Connector(this.model.toJSON());
             this.$el.html(html);
@@ -178,7 +215,7 @@ Backbone.Model.prototype.toJSON = function() {
            this.model.set('sel_sizes',ct.sizes);
 	         this.model.set('size',ct.sizes[0].id);
            this.model.set('price',ct.sizes[0].prezzo);
-                
+            this.model.set('codice',ct.sizes[0].codice);
 	         this.render();
 
         },
@@ -187,6 +224,7 @@ Backbone.Model.prototype.toJSON = function() {
             var sz=this.$el.find('.conn-size-selector select').val();
             this.model.set('size',this.model.get('sel_sizes')[sz].id);
             this.model.set('price',this.model.get('sel_sizes')[sz].prezzo);
+            this.model.set('codice',this.model.get('sel_sizes')[sz].codice);
 
         }
 
@@ -265,7 +303,7 @@ Backbone.Model.prototype.toJSON = function() {
     var vl=new FMPrevent.Views.CableEnd({model:this.model.get('left_end')});
     this.$el.append(vl.render().$el);
     var me=this;
-    if('undefined' !== typeof cable_types){
+    if('undefined' == typeof loadingctx){
     this.$el.find("#cable-type").autocomplete({
         source: cable_types
      }).val(this.model.get('type'));
@@ -322,7 +360,7 @@ FMPrevent.Views.Price = Backbone.View.extend({
     var rend=this.model.get('right_end').get('conns').models;
     var lend=this.model.get('left_end').get('conns').models;
     var nconns=rend[0].get('n_conns');
-    var total=tl*cable_prices[tidx];
+    var total=tl/1000*cable_prices[tidx];
     for(var i=0;i<nconns;i++){
 
       total+=rend[i].get('price');

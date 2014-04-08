@@ -6,11 +6,15 @@
 
 			
 					<div class="row"><div class="col-md-9"><h3>Connettori inseriti</h3><table id="connstable" class="table data-table">
-						<thead><tr><th>ID</th><th>tipo</th><th>dimesione</th><th>prezzo</th><th>azioni</th></tr></thead><tbody>
+						<thead><tr><th>ID</th><th>Codice</th><th>tipo</th><th>dimesione</th><th>prezzo</th><th>azioni</th></tr></thead><tbody>
 					</tbody></table></div>
 					<div class="col-md-3"><h3>Aggiungi connettore</h3>
 					
 					<form role="form">
+					<div class="form-group">
+						<label for="codice">Codice connettore:</label>
+						<input type="text" name="codice" id="codice" size="20" maxlength="6"/>
+					</div>
 					<div class="form-group">
 						<label for="tipo">Tipo connettore:</label>
 						<select name="tipo" id="tipo"></select>
@@ -35,7 +39,7 @@ reload_tablec=function(tblid){
 		jQuery.post(ajaxurl,{action:'get_connectors'}).done(function(data){
 		if(coTable != null)coTable.fnDestroy();
 		var tb=jQuery(tblid+" tbody");
-		tb.html('<tr><td>Loading...</td><td>Loading...</td><td>Loading...</td><td>Loading...</td><td>Loading...</td></tr>');
+		tb.html('<tr><td>Loading...</td><td>Loading...</td><td>Loading...</td><td>Loading...</td><td>Loading...</td><td>Loading...</td></tr>');
 		var d=data.replace(/\\/g, '');
 		d=d.substring(1,d.length-1);
 		var d = JSON.parse(d);
@@ -44,7 +48,7 @@ reload_tablec=function(tblid){
 			
 			jQuery.each(el.sizes,function(ii,eel){
 				console.log(el);
-				tb.append('<tr><td>'+eel.id+'</td><td>'+el.nome+'</td><td>'+eel.size+'</td><td>'+eel.prezzo+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');
+				tb.append('<tr><td>'+eel.id+'</td><td>'+eel.codice+'<td>'+el.nome+'</td><td>'+eel.size+'</td><td>'+eel.prezzo+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');
 			});
 		});
     	

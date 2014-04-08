@@ -16,13 +16,33 @@
 			
 			</div>
 
-
+<div id="canvastable" style="position:absolute;z-index:-1000"></div>
 <div id="ordercontainer" class="panel panel-default">
 <div class="panel-body">
+	
 <div id='fmprevent' ></div>
  </div>
 </div><div id="canvas"></div>
 <script type="text/javascript">
+<?php
+
+  global $wpdb;
+  $result = $wpdb->get_results("select * from ".$wpdb->prefix . "fmprev_cable_types");
+  
+ 
+  $prices='[';
+  $types='[';
+  foreach ( $result as $r ) 
+  {
+      $types.='"'.$r->sigla.'",';
+      $prices.=$r->prezzo_metro.',';
+    }  
+  $types.= '];';
+  $prices.='];';
+  echo 'cable_prices='.$prices.';';
+  echo 'cable_types='.$types.';';
+  echo 'loadingctx=true;';
+?>
 reload_tableorders=function(tblid){
 		jQuery.post(ajaxurl,{action:'get_orders'}).done(function(data){
 		if(ordersoTable != null){ordersoTable.fnDestroy();ordersotable=null;}
@@ -63,20 +83,52 @@ reload_tableorders=function(tblid){
 				var cab=new FMPrevent.Models.Cable({type:d.type});
 				cab.loadJSON(d);
 				jQuery('#printbtn').remove();
+				jQuery('#canvastable').html('');
 				jQuery('#orderdetails').remove();
 				thecable = new FMPrevent.Views.Cable({model:cab});
-				 jQuery('#fmprevent').find("input").attr('disabled','disabled');
-      				jQuery('#fmprevent').find("select").attr('disabled','disabled');
-				jQuery('#fmprevent').before(FMPrevent.Templates.OrderInfo(d.info));
+				jQuery('#fmprevent').find("input").attr('disabled','disabled').attr('placeholder','');
+      			jQuery('#fmprevent').find("select").attr('disabled','disabled');
+
+				//jQuery('#fmprevent').before(FMPrevent.Templates.OrderInfo(d.info));
 				jQuery('#fmprevent').after('<button id="printbtn" class="btn btn-primary">Scarica</button>');
 				jQuery('#printbtn').click(function(){
-				html2canvas(jQuery('#ordercontainer')[0], {
+				/*html2canvas(jQuery('#ordercontainer')[0], {
   				onrendered: function(canvas) {
-   				 jQuery('#canvas').html('').append(canvas);
-    			var oCanvas = jQuery('canvas')[0];  
+   				 	jQuery('#canvas').html('').append(canvas);
+    				var oCanvas = jQuery('canvas')[0];  
 					Canvas2Image.saveAsPNG(oCanvas); 
-  				}
-			});
+  					}
+				});*/
+				//costruisco pdf
+				var doc = new jsPDF('landscape');
+				doc.text(50, 20, 'Ordine preventivatore numero: '+d.info.id);
+				doc.text(20, 30, 'Dati cliente');
+				var h=30;
+				jQuery.each(d.info,function(i,e){
+					if(i=='id')
+						return;
+					h+=10;
+					doc.text(20, h, i+': '+e);
+				});
+				var tb=cab.gen_distinta();
+				jQuery('#canvastable').append(tb);
+				debugger;
+				doc.addHTML(jQuery('#canvastable')[0],20,h+10,function(){
+					html2canvas(jQuery('#ordercontainer')[0], {
+
+  				onrendered: function(canvas) {
+   				 	jQuery('#canvas').html('').append(canvas);
+    				var oCanvas = jQuery('canvas')[0];  
+					//var png=Canvas2Image.convertToImage(oCanvas); 
+					var img=oCanvas.toDataURL();
+					
+					doc.addPage();
+					doc.addImage(img, 'PNG', 10, 20, 280, 130);
+					doc.save('Test.pdf');
+  					}
+				});});
+				
+				
 
 				});
 				/**/

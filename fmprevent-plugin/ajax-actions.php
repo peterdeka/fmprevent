@@ -50,7 +50,7 @@ function add_order(){
 	else
 		$sql['msg']='';
 
-	if (empty($oinfo["order_quant"]))
+	if (empty($oinfo["order_quant"]) || !is_numeric($oinfo["order_quant"]))
 		{echo 'NO5'; die();}
 	else
 		{$sql['quantity'] = test_input($oinfo["order_quant"]);}
@@ -62,6 +62,46 @@ function add_order(){
 	$o=str_replace('\\','',$p['order']);
 	$order=json_decode($o, true);
 	if($order == null) { echo 'NO7'; die(); }
+	//costruisco elenco componenti
+	$html='<table style="border:1px solid #666"><tr><th>Componente</th><th>Unita</th><th>Prezzo-u</th><th>Prezzo totale</th>';
+	global $wpdb;
+	$wpdb->show_errors();
+	$table_name = $wpdb->prefix . "fmprev_cable_types";
+	$cabtype=$order['type'];
+	$result = $wpdb->get_results("select * from ".$table_name." WHERE sigla='".test_input($cabtype)."'");
+	if (count($result)<1)
+		{echo 'NOval'; die();}
+	$cprice=$result[0]->prezzo_metro*$order['t_length']/1000;
+	$html.='<tr><td>Cavo '.$cabtype.'</td><td>'.$order['t_length'].'mm</td><td>'.$result[0]->prezzo_metro.'</td>'.$cprice.'<td></td></tr>';
+	$connectors=array();
+	foreach($order['right_end']['conns'] as $c) {
+		
+		if (array_key_exists($c['size'],$connectors))
+			$connectors[$c['size']]+=1;
+		else
+			$connectors[$c['size']]=1;
+	}
+	foreach($order['left_end']['conns'] as $c) {
+		if (array_key_exists($c['size'],$connectors))
+			$connectors[$c['size']]+=1;
+		else
+			$connectors[$c['size']]=1;
+	}
+
+	
+	//verifico esistenza e costruisco tabella componenti
+	
+	foreach ($connectors as $k => $v){
+		$table_name = $wpdb->prefix . "fmprev_connettori_sz";
+		$result = $wpdb->get_results("select * from ".$table_name." WHERE id=".test_input($k));
+		if (count($result)<1)
+			{echo 'NO conn'.$k; die();}
+		$html.='<tr><td>Conn. '.$result[0]->codice.'</td><td>'.$v.'</td><td>'.$result[0]->prezzo.'</td><td>'.$result[0]->prezzo*$v.'</td></tr>';
+		$cprice+=$result[0]->prezzo*$v;
+	}
+
+	$html.='<tr><td><strong>Totale</strong></td><td></td><td></td><td>'.$cprice.'</td></tr></table>';
+
 	$sql['json_cable']=$o;
 
 	//inserisco
@@ -83,11 +123,14 @@ function add_order(){
 	$headers[] = "Content-type: text/html";
 	$message='<p>Ricevuto un nuovo ordine preventivatore. Dati cliente:</p>';
 	$message.='<p>Nome:'.$oinfo["order_name"].'</p>';
-	$message.='<p>Email:'.$oinfo["order_email"].'</p>';
+	$message.='<p>Email:'.$oinfo["order_mail"].'</p>';
 	$message.='<p>Tel:'.$oinfo["order_phone"].'</p>';
 	$message.='<p>Messaggio:'.$oinfo["order_message"].'</p>';
 	$message.='<p>Quantita:'.$oinfo["order_quant"].'</p>';
+	$message.='<h3>Materiale richiesto per un singolo pezzo</h3>'.$html;
 	$message.='<p>Visualizza gli ordini <a href="http://www.fmgroup.it/wp-admin/admin.php?page=fmprevent_admin"> qui </a>.</p>';
+
+
 
 	wp_mail( 'pietro.decaro@wannaup.com', 'nuovo ordine preventivatore', $message, $headers );
 
@@ -157,7 +200,7 @@ function add_connector_sz(){
 
 	global $wpdb;
 	$table_name = $wpdb->prefix . "fmprev_connettori_sz";
-	if($wpdb->insert( $table_name, array( 'tipo' => $newtype,'size'=>$newsz,'prezzo'=>$newprice ) )>0){
+	if($wpdb->insert( $table_name, array( 'tipo' => $newtype,'size'=>$newsz,'prezzo'=>$newprice,'codice'=>$p['codice'] ) )>0){
 		echo 'OK';
 	}
 	else{
@@ -199,7 +242,7 @@ function get_connectors(){
 		$table_name = $wpdb->prefix . "fmprev_connettori_sz";
 		$re = $wpdb->get_results("SELECT * from ".$table_name." WHERE tipo=".$r->id);
 		foreach( $re as $rr)
-			$jstr.='{"id":'.$rr->id.',"size":'.$rr->size.',"prezzo":'.$rr->prezzo.'},';
+			$jstr.='{"id":'.$rr->id.',"size":'.$rr->size.',"prezzo":'.$rr->prezzo.',"codice":"'.$rr->codice.'"},';
 
 		if(count($re)>0)	
 		$jstr = substr_replace($jstr, ']', -1, strlen($jstr));
