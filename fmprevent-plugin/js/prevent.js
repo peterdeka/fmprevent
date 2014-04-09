@@ -129,7 +129,7 @@ Backbone.Model.prototype.toJSON = function() {
 
     gen_distinta: function(){
 
-      var html='<table style="border:1px solid #666;width:700px;background-color:white"><tr><th>Componente</th><th>Unita</th><th>Prezzo-u</th><th>Prezzo totale</th>';
+      var html='<h4>Materiale per un cavo</h4><table style="border:1px solid #666;width:700px;background-color:white"><tr><th>Componente</th><th>Unita</th><th>Prezzo-u</th><th>Prezzo totale</th>';
       var tidx=cable_types.indexOf(this.get('type'));
       var tl=this.get('t_length');
       var rend=this.get('right_end').get('conns').models;
@@ -157,7 +157,7 @@ Backbone.Model.prototype.toJSON = function() {
         total+=el.c*el.prc;
         html+='<tr><td>Conn. '+i+'</td><td>'+el.c+'</td><td>'+el.prc+'</td><td>'+el.c*el.prc+'</td></tr>';
       });
-      html+='<tr style="border-top:1px solid #666"><td>Totale</td><td></td><td></td><td>'+total+'</td></tr>';
+      html+='<tr style="border-top:1px solid #666"><td>Totale per un cavo</td><td></td><td></td><td>'+total+'</td></tr>';
       return html+'</table>';
 
 

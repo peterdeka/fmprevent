@@ -267,13 +267,13 @@ function get_orders(){
 
 	global $wpdb;
 	$table_name = $wpdb->prefix . "fmprev_orders";
-	$result = $wpdb->get_results("select id,name,quantity from ".$table_name);
+	$result = $wpdb->get_results("select id,name,quantity,created_at from ".$table_name." ORDER BY id ASC");
 	$jstr='{"orders":[';
 
 	foreach ( $result as $r ) 
 	{
 
-		$jstr.='{"id":'.$r->id.',"name":"'.$r->name.'","quantity":'.$r->quantity.'},';
+		$jstr.='{"id":'.$r->id.',"name":"'.$r->name.'","quantity":'.$r->quantity.',"created_at":"'.$r->created_at.'"},';
 
 	}
 	if(count($result)>0)	

@@ -10,7 +10,7 @@
 		<div class="col-md-12">
 			<h3>Ordini ricevuti</h3>
 			<table id="orderstable" class="table data-table">
-				<thead><tr><th>ID</th><th>Nome cliente</th><th>Quantità</th><th>Azioni</th></tr></thead>
+				<thead><tr><th>ID</th><th>Nome cliente</th><th>Quantità</th><th>Data UTC creazione</th><th>Azioni</th></tr></thead>
 				<tbody>
 				</tbody></table></div>
 			
@@ -53,7 +53,7 @@ reload_tableorders=function(tblid){
 		var d = JSON.parse(d);
 		jQuery.each(d.orders,function(i,el){
 
-			tb.append('<tr><td><a class="orderlink" href="#">'+el.id+'</a></td><td>'+el.name+'</td><td>'+el.quantity+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');
+			tb.append('<tr><td><a class="orderlink" href="#">'+el.id+'</a></td><td>'+el.name+'</td><td>'+el.quantity+'</td><td>'+el.created_at+'</td><td><button type="button" class="btn btn-danger btn-xs delrow">Elimina</button></td</tr>');
 
 		});
     	
@@ -101,7 +101,7 @@ reload_tableorders=function(tblid){
 				});*/
 				//costruisco pdf
 				var doc = new jsPDF('landscape');
-				doc.text(50, 20, 'Ordine preventivatore numero: '+d.info.id);
+				doc.text(100, 20, 'Ordine preventivatore numero: '+d.info.id);
 				doc.text(20, 30, 'Dati cliente');
 				var h=30;
 				jQuery.each(d.info,function(i,e){
@@ -112,22 +112,31 @@ reload_tableorders=function(tblid){
 				});
 				var tb=cab.gen_distinta();
 				jQuery('#canvastable').append(tb);
-				debugger;
-				doc.addHTML(jQuery('#canvastable')[0],20,h+10,function(){
-					html2canvas(jQuery('#ordercontainer')[0], {
+				
+				html2canvas(jQuery('#canvastable')[0], {
+					onrendered:function(canvas){
+						jQuery('#canvastable').html('').append(canvas);
+						var oCanvas = jQuery('#canvastable canvas')[0];  
+					
+					var img=oCanvas.toDataURL("image/jpeg");
+					
+					doc.addImage(img, 'JPEG', 20, 110, jQuery('#canvastable').width()/3, jQuery('#canvastable').height()/3);
+				html2canvas(jQuery('#ordercontainer')[0], {
 
-  				onrendered: function(canvas) {
-   				 	jQuery('#canvas').html('').append(canvas);
-    				var oCanvas = jQuery('canvas')[0];  
+  				onrendered: function(canvas1) {
+   				 	jQuery('#canvas').html('').append(canvas1);
+    				var oCanvas = jQuery('#canvas canvas')[0];  
 					//var png=Canvas2Image.convertToImage(oCanvas); 
-					var img=oCanvas.toDataURL();
+					var img=oCanvas.toDataURL("image/jpeg");
 					
 					doc.addPage();
-					doc.addImage(img, 'PNG', 10, 20, 280, 130);
+					doc.addImage(img, 'JPEG', 10, 20, 280, 130);
 					doc.save('Test.pdf');
+					
+					//doc.output('dataurl');
   					}
-				});});
-				
+				});
+				}});
 				
 
 				});
