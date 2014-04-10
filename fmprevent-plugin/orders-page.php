@@ -43,6 +43,23 @@
   echo 'cable_types='.$types.';';
   echo 'loadingctx=true;';
 ?>
+function getBase64Image(img) {
+    // Create an empty canvas element
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Copy the image contents to the canvas
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    // Get the data-URL formatted image
+    // Firefox supports PNG and JPEG. You could check img.src to guess the
+    // original format, but be aware the using "image/jpg" will re-encode the image.
+    var dataURL = canvas.toDataURL("image/jpeg");
+
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+}
 reload_tableorders=function(tblid){
 		jQuery.post(ajaxurl,{action:'get_orders'}).done(function(data){
 		if(ordersoTable != null){ordersoTable.fnDestroy();ordersotable=null;}
@@ -101,9 +118,11 @@ reload_tableorders=function(tblid){
 				});*/
 				//costruisco pdf
 				var doc = new jsPDF('landscape');
-				doc.text(100, 20, 'Ordine preventivatore numero: '+d.info.id);
-				doc.text(20, 30, 'Dati cliente');
-				var h=30;
+				doc.addImage(getBase64Image(jQuery('#fmlogo')[0]),'JPEG',20,10,jQuery('#fmlogo').width/3,jQuery('#fmlogo').height/3);
+				doc.text(110, 20, 'Ordine preventivatore numero: '+d.info.id);
+				doc.text(20, 40, 'Dati cliente');
+				doc.setFontSize(14);
+				var h=40;
 				jQuery.each(d.info,function(i,e){
 					if(i=='id')
 						return;

@@ -7,7 +7,8 @@ if ( !current_user_can( 'manage_options' ) )  {
 <div class="container" style="margin:0;background-color:#FDFDFD">  	
 	<div class="row">
 		<div class="col-md-7">
-			<h2>Preventivatore cavi FMGroup</h2>
+			<img id="fmlogo" src="http://www.fmgroup.it/wp-content/uploads/2013/12/logo_fmgroup3.png" style="float:left">
+			<h2>Preventivatore cavi </h2>
 		</div>
 	</div>
 	<div class="row">

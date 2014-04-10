@@ -35,6 +35,7 @@
 					</div></div>
 					
 <script type="text/javascript">
+
 reload_tablec=function(tblid){
 		jQuery.post(ajaxurl,{action:'get_connectors'}).done(function(data){
 		if(coTable != null)coTable.fnDestroy();

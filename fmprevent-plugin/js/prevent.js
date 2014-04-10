@@ -136,7 +136,7 @@ Backbone.Model.prototype.toJSON = function() {
       var lend=this.get('left_end').get('conns').models;
       var nconns=rend[0].get('n_conns');
       var total=tl/1000*cable_prices[tidx];
-      html+='<tr><td>Cavo. '+this.get('type')+'</td><td>'+tl+'</td><td>'+cable_prices[tidx]+'</td><td>'+total+'</td></tr>';
+      html+='<tr><td>Cavo. '+this.get('type')+'</td><td>'+tl+'(mm)</td><td>'+cable_prices[tidx]+'</td><td>'+total+'</td></tr>';
       var group_conns={};
       for(var i=0;i<nconns;i++){
         //conto raggruppati
